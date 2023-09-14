@@ -29,19 +29,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.snowtouch.hiddenharbor.ui.theme.HiddenHarborTheme
 
 @Composable
-fun StartScreen(){
+fun StartScreen(navController: NavHostController){
     Scaffold(
         topBar = { StartScreenTopBar() },
-        bottomBar = { ApplicationBottomBar() }
+        bottomBar = { ApplicationBottomBar(navController) }
     ) { innerPadding ->
         Column(modifier = Modifier.padding(innerPadding)) {
-
         }
     }
 }
@@ -56,7 +57,8 @@ fun StartScreenTopBar(
         cursorColor = Color.Black
     )
     CenterAlignedTopAppBar(
-        modifier = modifier.padding(8.dp)
+        modifier = modifier
+            .padding(8.dp)
             .clip(MaterialTheme.shapes.small),
         title = {
             TextField(
@@ -68,7 +70,10 @@ fun StartScreenTopBar(
                 trailingIcon = {
                     IconButton(
                         onClick = {/*TODO*/ }
-                    ) { Icon(imageVector = Icons.Filled.Search, contentDescription = null) } },
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Search,
+                            contentDescription = null) } },
                 shape = MaterialTheme.shapes.small,
                 colors = textFieldColors
             )
@@ -76,18 +81,20 @@ fun StartScreenTopBar(
     )
 }
 @Composable
-fun ApplicationBottomBar() {
+fun ApplicationBottomBar(navController: NavHostController) {
     BottomAppBar(
         actions = {
             Row(
-                modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 16.dp, end = 16.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 IconButtonWithText(
                     icon = Icons.Filled.Home,
                     label = "Home",
-                    onClick = { /* Handle click */ })
+                    onClick = { navController.navigate(AppRoute.StartScreen.name) })
                 IconButtonWithText(
                     icon = Icons.Filled.Favorite,
                     label = "Favorites",
@@ -103,7 +110,7 @@ fun ApplicationBottomBar() {
                 IconButtonWithText(
                     icon = Icons.Filled.Person,
                     label = "Account",
-                    onClick = { /* Handle click */ })
+                    onClick = { navController.navigate(AppRoute.AccountScreen.name) })
             }
         },
         modifier = Modifier.fillMaxWidth(),
@@ -121,13 +128,11 @@ fun IconButtonWithText(icon: ImageVector, label: String, onClick: () -> Unit) {
         Text(text = label, fontSize = 12.sp)
     }
 }
-
-
-
 @Preview(showBackground = true)
 @Composable
 fun StartScreenPreview() {
     HiddenHarborTheme {
-        StartScreen()
+        val context = LocalContext.current
+        StartScreen(navController = NavHostController(context))
     }
 }
