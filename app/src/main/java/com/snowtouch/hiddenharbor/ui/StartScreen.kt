@@ -5,8 +5,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Email
@@ -83,51 +86,64 @@ fun StartScreenTopBar(
 @Composable
 fun ApplicationBottomBar(navController: NavHostController) {
     BottomAppBar(
-        actions = {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 16.dp, end = 16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                IconButtonWithText(
-                    icon = Icons.Filled.Home,
-                    label = "Home",
-                    onClick = { navController.navigate(AppRoute.StartScreen.name) })
-                IconButtonWithText(
-                    icon = Icons.Filled.Favorite,
-                    label = "Favorites",
-                    onClick = { /* Handle click */ })
-                IconButtonWithText(
-                    icon = Icons.Filled.AddCircle,
-                    label = "Add",
-                    onClick = { /* Handle click */ })
-                IconButtonWithText(
-                    icon = Icons.Filled.Email,
-                    label = "Messages",
-                    onClick = { /* Handle click */ })
-                IconButtonWithText(
-                    icon = Icons.Filled.Person,
-                    label = "Account",
-                    onClick = { navController.navigate(AppRoute.AccountScreen.name) })
-            }
-        },
         modifier = Modifier.fillMaxWidth(),
         contentPadding = PaddingValues(2.dp)
-    )
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            IconButtonWithText(
+                icon = Icons.Filled.Home,
+                label = "Home",
+                onClick = { navController.navigate(AppRoute.StartScreen.name) }
+            )
+            Spacer(modifier = Modifier.width(8.dp)) // Dodaj odstęp
+            IconButtonWithText(
+                icon = Icons.Filled.Favorite,
+                label = "Favorites",
+                onClick = { /* Handle click */ }
+            )
+            Spacer(modifier = Modifier.width(8.dp)) // Dodaj odstęp
+            IconButtonWithText(
+                icon = Icons.Filled.AddCircle,
+                label = "Add",
+                onClick = { /* Handle click */ }
+            )
+            Spacer(modifier = Modifier.width(8.dp)) // Dodaj odstęp
+            IconButtonWithText(
+                icon = Icons.Filled.Email,
+                label = "Messages",
+                onClick = { /* Handle click */ }
+            )
+            Spacer(modifier = Modifier.width(8.dp)) // Dodaj odstęp
+            IconButtonWithText(
+                icon = Icons.Filled.Person,
+                label = "Account",
+                onClick = { navController.navigate(AppRoute.AccountScreen.name) }
+            )
+        }
+    }
 }
 
 @Composable
 fun IconButtonWithText(icon: ImageVector, label: String, onClick: () -> Unit) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.clickable(onClick = onClick)
-    ) {
-        Icon(imageVector = icon, contentDescription = label)
-        Text(text = label, fontSize = 12.sp)
-    }
+    IconButton(
+        onClick = onClick,
+        modifier = Modifier.defaultMinSize(minWidth = 65.dp),
+        content = {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+            ) {
+                Icon(imageVector = icon, contentDescription = label)
+                Text(text = label, fontSize = 12.sp)
+            }
+        }
+    )
 }
+
 @Preview(showBackground = true)
 @Composable
 fun StartScreenPreview() {

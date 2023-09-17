@@ -7,8 +7,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.snowtouch.hiddenharbor.R
+import com.snowtouch.hiddenharbor.model.categories
 
-enum class AppRoute(@StringRes val title: Int){
+enum class AppRoute(@StringRes val title: Int?){
     StartScreen(title = R.string.start_screen_nav_title),
     AccountScreen(title = R.string.your_account_screen_nav_title)
 }
@@ -19,7 +20,7 @@ fun NavigationComponent(navController: NavHostController){
             StartScreen(navController)
         }
         composable(route = AppRoute.AccountScreen.name){
-
+            AccountScreen(categories = categories, navController)
         }
     }
 }

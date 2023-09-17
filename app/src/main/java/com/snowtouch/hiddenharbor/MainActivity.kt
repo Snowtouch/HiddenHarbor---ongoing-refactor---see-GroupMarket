@@ -13,6 +13,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.snowtouch.hiddenharbor.ui.NavigationComponent
 import com.snowtouch.hiddenharbor.ui.StartScreen
 import com.snowtouch.hiddenharbor.ui.theme.HiddenHarborTheme
 
@@ -26,7 +27,8 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    StartScreen(NavHostController(LocalContext.current))
+                    val navController = rememberNavController()
+                    NavigationComponent(navController = navController)
                 }
             }
         }

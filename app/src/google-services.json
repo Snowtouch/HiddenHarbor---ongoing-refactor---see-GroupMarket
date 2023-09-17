@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "50164844187",
+    "project_id": "xxxx",
+    "storage_bucket": "xxxx.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:50164844187:android:06131f241cf3f31175683e",
+        "android_client_info": {
+          "package_name": "com.snowtouch.hiddenharbor"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBolGfGyPpq0-9R47MxXQg7u-ccmqiErjg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
