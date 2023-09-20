@@ -99,25 +99,25 @@ fun ApplicationBottomBar(navController: NavHostController) {
                 label = "Home",
                 onClick = { navController.navigate(AppRoute.StartScreen.name) }
             )
-            Spacer(modifier = Modifier.width(8.dp)) // Dodaj odstęp
+            Spacer(modifier = Modifier.width(8.dp))
             IconButtonWithText(
                 icon = Icons.Filled.Favorite,
                 label = "Favorites",
-                onClick = { /* Handle click */ }
+                onClick = {  }
             )
-            Spacer(modifier = Modifier.width(8.dp)) // Dodaj odstęp
+            Spacer(modifier = Modifier.width(8.dp))
             IconButtonWithText(
                 icon = Icons.Filled.AddCircle,
                 label = "Add",
-                onClick = { /* Handle click */ }
+                onClick = {  }
             )
-            Spacer(modifier = Modifier.width(8.dp)) // Dodaj odstęp
+            Spacer(modifier = Modifier.width(8.dp))
             IconButtonWithText(
                 icon = Icons.Filled.Email,
                 label = "Messages",
-                onClick = { /* Handle click */ }
+                onClick = {  }
             )
-            Spacer(modifier = Modifier.width(8.dp)) // Dodaj odstęp
+            Spacer(modifier = Modifier.width(8.dp))
             IconButtonWithText(
                 icon = Icons.Filled.Person,
                 label = "Account",
