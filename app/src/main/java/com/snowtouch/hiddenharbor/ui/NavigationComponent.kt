@@ -20,7 +20,7 @@ fun NavigationComponent(navController: NavHostController){
             StartScreen(navController)
         }
         composable(route = AppRoute.AccountScreen.name){
-            AccountScreen(categories = categories, navController)
+            AccountScreen(loginStatus = null, categories = categories, navController)
         }
     }
 }
