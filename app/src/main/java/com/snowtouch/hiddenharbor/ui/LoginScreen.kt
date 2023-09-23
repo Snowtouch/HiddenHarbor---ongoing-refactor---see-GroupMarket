@@ -26,6 +26,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -36,9 +37,18 @@ import androidx.navigation.NavHostController
 import com.snowtouch.hiddenharbor.model.Category
 import com.snowtouch.hiddenharbor.model.Option
 import com.snowtouch.hiddenharbor.model.categories
+import com.snowtouch.hiddenharbor.viewmodel.AccountServiceImpl
+import com.snowtouch.hiddenharbor.viewmodel.LoginScreenViewModel
 
 @Composable
-fun AccountScreen(loginStatus: Boolean?, categories: List<Category>, navController: NavHostController){
+fun AccountScreen(
+    loginStatus: Boolean?,
+    categories: List<Category>,
+    navController: NavHostController,
+    viewModel: LoginScreenViewModel
+){
+    val uiState by viewModel.uiState
+
     Scaffold(
         bottomBar = { ApplicationBottomBar(navController) }
     ) { innerPadding ->
@@ -63,7 +73,12 @@ fun AccountScreen(loginStatus: Boolean?, categories: List<Category>, navControll
                 Column(
                     modifier = Modifier.weight(0.5f)
                 ) {
-                    LoginBox()
+                    LoginBox(
+                        uiState.email,
+                        viewModel::onEmailChange,
+                        uiState.password,
+                        viewModel::onPasswordChange
+                    )
                 }
                 ElevatedButton(
                     modifier = Modifier.size(width = 175.dp, height = 50.dp),
@@ -85,12 +100,11 @@ fun AccountScreen(loginStatus: Boolean?, categories: List<Category>, navControll
                     elevation = ButtonDefaults.buttonElevation()
                 ) {
                     Text(
-                        text = "Create account",
+                        text = "Register",
                         color = Color.White)
                 }
                 Column(
                     modifier = Modifier
-                        //.fillMaxSize()
                         .background(color = MaterialTheme.colorScheme.background)
                         .padding(innerPadding)
                         .padding(24.dp)
@@ -106,7 +120,13 @@ fun AccountScreen(loginStatus: Boolean?, categories: List<Category>, navControll
     }
 }
 @Composable
-fun LoginBox(modifier: Modifier = Modifier){
+fun LoginBox(
+    valueEmail: String,
+    onNewValueEmail: (String) -> Unit,
+    valuePassword: String,
+    onNewValuePassword: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
     Column(
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.SpaceEvenly,
@@ -120,8 +140,8 @@ fun LoginBox(modifier: Modifier = Modifier){
         ) {
             Column(modifier.padding(24.dp)) {
                 OutlinedTextField(
-                    value = "",
-                    onValueChange = {},
+                    value = valueEmail,
+                    onValueChange = { onNewValueEmail(it)},
                     label = { Text(text = "E-mail") },
                     leadingIcon = {
                         Icon(
@@ -133,8 +153,8 @@ fun LoginBox(modifier: Modifier = Modifier){
                 )
                 Spacer(modifier = modifier.height(8.dp))
                 OutlinedTextField(
-                    value = "",
-                    onValueChange = {},
+                    value = valuePassword,
+                    onValueChange = { onNewValuePassword(it) },
                     label = { Text(text = "Password") },
                     leadingIcon = {
                         Icon(
@@ -170,5 +190,10 @@ fun OptionItem(option: Option) {
 @Preview
 @Composable
 fun AccountScreenPreview(){
-    AccountScreen(loginStatus = false, categories, navController = NavHostController(LocalContext.current))
+    AccountScreen(
+        loginStatus = false,
+        categories,
+        navController = NavHostController(LocalContext.current),
+        viewModel = LoginScreenViewModel(accountServiceImpl)
+    )
 }
