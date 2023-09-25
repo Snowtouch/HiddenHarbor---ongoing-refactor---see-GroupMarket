@@ -11,10 +11,10 @@ import androidx.navigation.compose.rememberNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.snowtouch.hiddenharbor.di.firebaseModule
 import com.snowtouch.hiddenharbor.di.isFirebaseLocal
+import com.snowtouch.hiddenharbor.repository.AccountServiceImpl
 import com.snowtouch.hiddenharbor.ui.AppUiState
 import com.snowtouch.hiddenharbor.ui.NavigationComponent
 import com.snowtouch.hiddenharbor.ui.theme.HiddenHarborTheme
-import com.snowtouch.hiddenharbor.viewmodel.AccountServiceImpl
 import com.snowtouch.hiddenharbor.viewmodel.LoginScreenViewModel
 import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext

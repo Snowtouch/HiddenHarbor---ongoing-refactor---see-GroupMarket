@@ -33,25 +33,24 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.google.firebase.auth.FirebaseAuth
 import com.snowtouch.hiddenharbor.model.Category
 import com.snowtouch.hiddenharbor.model.Option
 import com.snowtouch.hiddenharbor.viewmodel.LoginScreenViewModel
-import org.koin.compose.koinInject
 
 @Composable
 fun AccountScreen(
     categories: List<Category>,
     navController: NavHostController,
     viewModel: LoginScreenViewModel,
-    firebaseAuth: FirebaseAuth = koinInject()
 ) {
     val uiState by viewModel.uiState
     val context = LocalContext.current
+    val appState by viewModel.appState
+
     Scaffold(
         bottomBar = { ApplicationBottomBar(navController) }
     ) { innerPadding ->
-        if (firebaseAuth.currentUser!=null)
+        if (appState.userLoggedIn)
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -62,7 +61,8 @@ fun AccountScreen(
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
                     ElevatedButton(
                         onClick = { viewModel.signOut()
-                        navController.navigate(route = AppRoute.AccountScreen.name)}
+                        //navController.navigate(route = AppRoute.AccountScreen.name)
+                        }
                     ) {
                         Text(text = "Sign out")
                     }
@@ -91,7 +91,8 @@ fun AccountScreen(
                     modifier = Modifier.size(width = 175.dp, height = 50.dp),
                     onClick = {
                         viewModel.signIn(uiState.email, uiState.password, context)
-                              navController.navigate(route = AppRoute.AccountScreen.name)},
+                              //navController.navigate(route = AppRoute.AccountScreen.name)
+                              },
                     shape = MaterialTheme.shapes.small,
                     colors = ButtonDefaults.buttonColors(),
                     elevation = ButtonDefaults.buttonElevation()
@@ -104,7 +105,8 @@ fun AccountScreen(
                 ElevatedButton(
                     modifier = Modifier.size(width = 175.dp, height = 50.dp),
                     onClick = { viewModel.createAccount(uiState.email, uiState.password, context)
-                        navController.navigate(route = AppRoute.AccountScreen.name)},
+                        //navController.navigate(route = AppRoute.AccountScreen.name)
+                              },
                     shape = MaterialTheme.shapes.small,
                     colors = ButtonDefaults.buttonColors(),
                     elevation = ButtonDefaults.buttonElevation()

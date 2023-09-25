@@ -3,6 +3,8 @@ package com.snowtouch.hiddenharbor.di
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
+import com.snowtouch.hiddenharbor.viewmodel.LoginScreenViewModel
+import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val firebaseModule = module {
@@ -30,5 +32,6 @@ val firebaseModule = module {
             FirebaseStorage.getInstance()
         }
     }
+    viewModel { LoginScreenViewModel(get()) }
 }
 var isFirebaseLocal = false

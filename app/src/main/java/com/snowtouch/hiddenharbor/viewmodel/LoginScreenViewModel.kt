@@ -4,6 +4,7 @@ import android.content.Context
 import android.widget.Toast
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import com.snowtouch.hiddenharbor.repository.AccountServiceImpl
 import com.snowtouch.hiddenharbor.ui.AppUiState
 
 class LoginScreenViewModel(
@@ -14,6 +15,9 @@ class LoginScreenViewModel(
     var appState = mutableStateOf(AppUiState())
         private set
 
+    private fun clearEmailAndPasswordFields(){
+        uiState.value = uiState.value.copy(email = "", password = "")
+    }
     fun onEmailChange(newValue: String) {
         uiState.value = uiState.value.copy(email = newValue)
     }
@@ -22,20 +26,26 @@ class LoginScreenViewModel(
     }
     fun createAccount(email: String, password: String, context: Context) {
         accountServiceImpl.createAccount(email, password) { error ->
-            if (error!=null)
-            Toast.makeText(context, "$error", Toast.LENGTH_LONG)
-                .show()
+            if (error!=null) {
+                Toast.makeText(context, "$error", Toast.LENGTH_LONG)
+                    .show()
+            }
         }
     }
     fun signIn(email: String, password: String, context: Context) {
         accountServiceImpl.authenticate(email, password) { error ->
-            if (error!=null)
-            Toast.makeText(context, "$error", Toast.LENGTH_LONG)
-                .show()
+            if (error!=null) {
+                Toast.makeText(context, "$error", Toast.LENGTH_LONG)
+                    .show()
+            } else {
+                appState.value = appState.value.copy(userLoggedIn = true)
+            }
         }
     }
     fun signOut(){
         accountServiceImpl.signOut()
+        appState.value = appState.value.copy(userLoggedIn = false)
+        clearEmailAndPasswordFields()
     }
 }
 

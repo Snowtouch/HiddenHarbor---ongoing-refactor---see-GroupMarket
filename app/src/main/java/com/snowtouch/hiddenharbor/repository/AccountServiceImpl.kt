@@ -1,4 +1,4 @@
-package com.snowtouch.hiddenharbor.viewmodel
+package com.snowtouch.hiddenharbor.repository
 
 import com.google.firebase.auth.FirebaseAuth
 

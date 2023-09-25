@@ -1,4 +1,4 @@
-package com.snowtouch.hiddenharbor.viewmodel
+package com.snowtouch.hiddenharbor.repository
 
 interface AccountService {
     fun createAccount(email: String, password: String, onResult: (Throwable?) -> Unit)
