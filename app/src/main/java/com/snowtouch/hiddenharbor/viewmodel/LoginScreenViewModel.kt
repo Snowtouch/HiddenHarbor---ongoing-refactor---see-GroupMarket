@@ -3,13 +3,15 @@ package com.snowtouch.hiddenharbor.viewmodel
 import android.content.Context
 import android.widget.Toast
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
+import com.snowtouch.hiddenharbor.ui.AppUiState
 
 class LoginScreenViewModel(
     private val accountServiceImpl: AccountServiceImpl
 ) : ViewModel() {
     var uiState = mutableStateOf(LoginUiState())
+        private set
+    var appState = mutableStateOf(AppUiState())
         private set
 
     fun onEmailChange(newValue: String) {
@@ -20,9 +22,20 @@ class LoginScreenViewModel(
     }
     fun createAccount(email: String, password: String, context: Context) {
         accountServiceImpl.createAccount(email, password) { error ->
+            if (error!=null)
             Toast.makeText(context, "$error", Toast.LENGTH_LONG)
                 .show()
         }
+    }
+    fun signIn(email: String, password: String, context: Context) {
+        accountServiceImpl.authenticate(email, password) { error ->
+            if (error!=null)
+            Toast.makeText(context, "$error", Toast.LENGTH_LONG)
+                .show()
+        }
+    }
+    fun signOut(){
+        accountServiceImpl.signOut()
     }
 }
 

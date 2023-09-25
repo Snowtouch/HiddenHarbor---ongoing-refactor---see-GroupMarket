@@ -2,25 +2,28 @@ package com.snowtouch.hiddenharbor.ui
 
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavHost
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.snowtouch.hiddenharbor.R
 import com.snowtouch.hiddenharbor.model.categories
+import com.snowtouch.hiddenharbor.viewmodel.LoginScreenViewModel
 
 enum class AppRoute(@StringRes val title: Int?){
     StartScreen(title = R.string.start_screen_nav_title),
     AccountScreen(title = R.string.your_account_screen_nav_title)
 }
 @Composable
-fun NavigationComponent(navController: NavHostController){
+fun NavigationComponent(
+    navController: NavHostController,
+    loginScreenViewModel: LoginScreenViewModel
+) {
     NavHost(navController = navController, startDestination = AppRoute.StartScreen.name){
         composable(route = AppRoute.StartScreen.name) {
             StartScreen(navController)
         }
         composable(route = AppRoute.AccountScreen.name){
-            AccountScreen(loginStatus = null, categories = categories, navController)
+            AccountScreen(categories = categories, navController, loginScreenViewModel)
         }
     }
 }

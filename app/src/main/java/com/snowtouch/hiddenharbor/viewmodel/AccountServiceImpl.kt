@@ -1,20 +1,24 @@
 package com.snowtouch.hiddenharbor.viewmodel
 
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.auth.FirebaseAuth
 
-abstract class AccountServiceImpl: AccountService {
+class AccountServiceImpl(private val firebaseAuth: FirebaseAuth): AccountService {
     override fun createAccount(email: String, password: String, onResult: (Throwable?) -> Unit){
-        Firebase.auth.createUserWithEmailAndPassword(email, password)
+        firebaseAuth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { onResult(it.exception) }
     }
 
     override fun authenticate(email: String, password: String, onResult: (Throwable?) -> Unit) {
-        Firebase.auth.signInWithEmailAndPassword(email, password)
+        firebaseAuth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { onResult(it.exception) }
     }
 
-    override fun deleteAccount(email: String, password: String, onResult: (Throwable?) -> Unit) {
-        Firebase.auth.currentUser?.delete()
+    override fun deleteAccount(password: String, onResult: (Throwable?) -> Unit) {
+        firebaseAuth.currentUser?.delete()
+            ?.addOnCompleteListener { onResult(it.exception) }
+    }
+
+    override fun signOut() {
+        firebaseAuth.signOut()
     }
 }

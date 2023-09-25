@@ -65,6 +65,7 @@ dependencies {
     implementation("androidx.navigation:navigation-runtime-ktx:2.7.3")
     implementation("androidx.navigation:navigation-compose:2.7.3")
     implementation("androidx.compose.material:material:1.5.1")
+
     implementation(platform("com.google.firebase:firebase-bom:32.2.3"))
     implementation("com.google.firebase:firebase-analytics-ktx")
     implementation ("com.firebaseui:firebase-ui-auth:7.2.0")
@@ -73,6 +74,14 @@ dependencies {
     implementation("com.google.firebase:firebase-storage-ktx")
     implementation("com.google.firebase:firebase-inappmessaging-display-ktx")
     implementation("com.google.firebase:firebase-database-ktx")
+
+
+    implementation ("io.insert-koin:koin-android:3.5.0")
+    implementation ("io.insert-koin:koin-androidx-compose-navigation:3.5.0")
+    implementation ("io.insert-koin:koin-androidx-compose:3.5.0")
+    implementation("io.insert-koin:koin-core-coroutines:3.5.0")
+    implementation ("io.insert-koin:koin-android-compat:3.5.0")
+
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")

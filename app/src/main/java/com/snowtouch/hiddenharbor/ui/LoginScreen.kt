@@ -31,28 +31,27 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.google.firebase.auth.FirebaseAuth
 import com.snowtouch.hiddenharbor.model.Category
 import com.snowtouch.hiddenharbor.model.Option
-import com.snowtouch.hiddenharbor.model.categories
-import com.snowtouch.hiddenharbor.viewmodel.AccountServiceImpl
 import com.snowtouch.hiddenharbor.viewmodel.LoginScreenViewModel
+import org.koin.compose.koinInject
 
 @Composable
 fun AccountScreen(
-    loginStatus: Boolean?,
     categories: List<Category>,
     navController: NavHostController,
-    viewModel: LoginScreenViewModel
-){
+    viewModel: LoginScreenViewModel,
+    firebaseAuth: FirebaseAuth = koinInject()
+) {
     val uiState by viewModel.uiState
-
+    val context = LocalContext.current
     Scaffold(
         bottomBar = { ApplicationBottomBar(navController) }
     ) { innerPadding ->
-        if (loginStatus == true)
+        if (firebaseAuth.currentUser!=null)
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -60,6 +59,14 @@ fun AccountScreen(
                     .padding(innerPadding)
                     .padding(24.dp)
             ) {
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+                    ElevatedButton(
+                        onClick = { viewModel.signOut()
+                        navController.navigate(route = AppRoute.AccountScreen.name)}
+                    ) {
+                        Text(text = "Sign out")
+                    }
+                }
                 categories.forEach { category ->
                     CategoryItem(category = category)
                     category.options.forEach { option ->
@@ -82,7 +89,9 @@ fun AccountScreen(
                 }
                 ElevatedButton(
                     modifier = Modifier.size(width = 175.dp, height = 50.dp),
-                    onClick = { /*TODO*/ },
+                    onClick = {
+                        viewModel.signIn(uiState.email, uiState.password, context)
+                              navController.navigate(route = AppRoute.AccountScreen.name)},
                     shape = MaterialTheme.shapes.small,
                     colors = ButtonDefaults.buttonColors(),
                     elevation = ButtonDefaults.buttonElevation()
@@ -94,7 +103,8 @@ fun AccountScreen(
                 Spacer(modifier = Modifier.padding(top = 8.dp))
                 ElevatedButton(
                     modifier = Modifier.size(width = 175.dp, height = 50.dp),
-                    onClick = { /*TODO*/ },
+                    onClick = { viewModel.createAccount(uiState.email, uiState.password, context)
+                        navController.navigate(route = AppRoute.AccountScreen.name)},
                     shape = MaterialTheme.shapes.small,
                     colors = ButtonDefaults.buttonColors(),
                     elevation = ButtonDefaults.buttonElevation()
@@ -135,7 +145,7 @@ fun LoginBox(
         ElevatedCard(
             modifier = Modifier,
             shape = RoundedCornerShape(12.dp),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
             elevation = CardDefaults.cardElevation()
         ) {
             Column(modifier.padding(24.dp)) {
@@ -187,13 +197,13 @@ fun OptionItem(option: Option) {
     }
     Divider()
 }
-@Preview
+/*@Preview
 @Composable
-fun AccountScreenPreview(){
+fun AccountScreenPreview() {
+    val loginScreenViewModel: LoginScreenViewModel
     AccountScreen(
-        loginStatus = false,
         categories,
         navController = NavHostController(LocalContext.current),
-        viewModel = LoginScreenViewModel(accountServiceImpl)
+        viewModel = loginScreenViewModel
     )
-}
+}*/

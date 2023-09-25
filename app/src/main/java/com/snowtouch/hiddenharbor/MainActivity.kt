@@ -6,24 +6,32 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
+import com.snowtouch.hiddenharbor.di.firebaseModule
+import com.snowtouch.hiddenharbor.di.isFirebaseLocal
+import com.snowtouch.hiddenharbor.ui.AppUiState
 import com.snowtouch.hiddenharbor.ui.NavigationComponent
-import com.snowtouch.hiddenharbor.ui.StartScreen
 import com.snowtouch.hiddenharbor.ui.theme.HiddenHarborTheme
+import com.snowtouch.hiddenharbor.viewmodel.AccountServiceImpl
+import com.snowtouch.hiddenharbor.viewmodel.LoginScreenViewModel
+import org.koin.android.ext.android.inject
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.startKoin
 
 class MainActivity : ComponentActivity() {
-    private lateinit var auth: FirebaseAuth
+    private  val firebaseAuth: FirebaseAuth by inject()
+    private lateinit var loginScreenViewModel: LoginScreenViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
-        auth = Firebase.auth
+        isFirebaseLocal = true
+
+        startKoin {
+            androidContext(this@MainActivity)
+            modules(firebaseModule)
+        }
+
+        loginScreenViewModel = LoginScreenViewModel(AccountServiceImpl(firebaseAuth))
 
         super.onCreate(savedInstanceState)
         setContent {
@@ -33,7 +41,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val navController = rememberNavController()
-                    NavigationComponent(navController = navController)
+                    NavigationComponent(navController = navController, loginScreenViewModel)
                 }
             }
         }
@@ -41,8 +49,8 @@ class MainActivity : ComponentActivity() {
     public override fun onStart() {
         super.onStart()
         // Check if user is signed in (non-null) and update UI accordingly.
-        val currentUser = auth.currentUser
-        if (currentUser != null) {
+        if (firebaseAuth.currentUser != null) {
+            AppUiState(true)
         }
     }
 }
