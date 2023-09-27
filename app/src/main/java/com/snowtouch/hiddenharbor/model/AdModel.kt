@@ -7,7 +7,7 @@ data class AdModel(
     val privacyLevel: AdPrivacyLevel,
     val images: List<Int>,
     val description: String,
-    val price: Int,
+    val price: Long,
     val dateAdded: String
 )
 enum class AdPrivacyLevel{

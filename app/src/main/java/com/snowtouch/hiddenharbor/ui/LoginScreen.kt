@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Email
@@ -27,12 +29,20 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.snowtouch.hiddenharbor.R
 import com.snowtouch.hiddenharbor.model.Category
 import com.snowtouch.hiddenharbor.model.Option
 import com.snowtouch.hiddenharbor.viewmodel.LoginScreenViewModel
@@ -91,7 +101,6 @@ fun AccountScreen(
                     modifier = Modifier.size(width = 175.dp, height = 50.dp),
                     onClick = {
                         viewModel.signIn(uiState.email, uiState.password, context)
-                              //navController.navigate(route = AppRoute.AccountScreen.name)
                               },
                     shape = MaterialTheme.shapes.small,
                     colors = ButtonDefaults.buttonColors(),
@@ -123,7 +132,10 @@ fun AccountScreen(
                         .weight(1f)
                 ) {
                     CategoryItem(category = categories.last())
-                    categories.last().options.forEach { option ->
+                    val filteredOptions = categories.last().options.filterNot {
+                        option -> option.name == "Account data"
+                    }
+                    filteredOptions.forEach() { option ->
                         OptionItem(option = option)
                     }
                 }
@@ -139,6 +151,7 @@ fun LoginBox(
     onNewValuePassword: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val showPassword = remember { mutableStateOf(false) }
     Column(
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.SpaceEvenly,
@@ -161,6 +174,11 @@ fun LoginBox(
                             contentDescription = null
                         )
                     },
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Email,
+                        imeAction = ImeAction.Next
+                    ),
                     colors = TextFieldDefaults.outlinedTextFieldColors(containerColor = Color.White)
                 )
                 Spacer(modifier = modifier.height(8.dp))
@@ -174,6 +192,22 @@ fun LoginBox(
                             contentDescription = null
                         )
                     },
+                    trailingIcon = {
+                        IconButton(
+                            onClick = { showPassword.value = !showPassword.value }
+                        ) {
+                            Icon(painterResource(if (showPassword.value) R.drawable.baseline_visibility_24
+                            else R.drawable.baseline_visibility_off_24), contentDescription = null)
+
+                        }
+
+                    },
+                    singleLine = true,
+                    visualTransformation = if (showPassword.value) VisualTransformation.None else PasswordVisualTransformation(),
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Password,
+                        imeAction = ImeAction.Done
+                    ),
                     colors = TextFieldDefaults.outlinedTextFieldColors(containerColor = Color.White)
                 )
             }
@@ -195,6 +229,8 @@ fun OptionItem(option: Option) {
             .size(height = 48.dp, width = 300.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
+        Icon(imageVector = option.icon, contentDescription = null)
+        Spacer(modifier = Modifier.padding(6.dp))
         Text(text = option.name, style = MaterialTheme.typography.titleMedium)
     }
     Divider()

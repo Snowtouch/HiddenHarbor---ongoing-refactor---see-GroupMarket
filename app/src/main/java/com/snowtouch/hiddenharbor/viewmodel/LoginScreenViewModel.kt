@@ -18,6 +18,9 @@ class LoginScreenViewModel(
     private fun clearEmailAndPasswordFields(){
         uiState.value = uiState.value.copy(email = "", password = "")
     }
+    private fun checkCredentials(email: String?, password: String?) : Boolean {
+        return email == "" || password == ""
+    }
     fun onEmailChange(newValue: String) {
         uiState.value = uiState.value.copy(email = newValue)
     }
@@ -25,20 +28,31 @@ class LoginScreenViewModel(
         uiState.value = uiState.value.copy(password = newValue)
     }
     fun createAccount(email: String, password: String, context: Context) {
-        accountServiceImpl.createAccount(email, password) { error ->
-            if (error!=null) {
-                Toast.makeText(context, "$error", Toast.LENGTH_LONG)
-                    .show()
+        if (checkCredentials(email, password)) {
+            Toast.makeText(context, "Enter valid credentials", Toast.LENGTH_LONG)
+                .show()
+        } else {
+            accountServiceImpl.createAccount(email, password) { error ->
+                if (error!=null) {
+                    Toast.makeText(context, error.localizedMessage, Toast.LENGTH_LONG)
+                        .show()
+                }
             }
         }
+
     }
     fun signIn(email: String, password: String, context: Context) {
-        accountServiceImpl.authenticate(email, password) { error ->
-            if (error!=null) {
-                Toast.makeText(context, "$error", Toast.LENGTH_LONG)
-                    .show()
-            } else {
-                appState.value = appState.value.copy(userLoggedIn = true)
+        if (checkCredentials(email, password)) {
+            Toast.makeText(context, "Enter valid credentials", Toast.LENGTH_LONG)
+                .show()
+        } else {
+            accountServiceImpl.authenticate(email, password) { error ->
+                if (error!=null) {
+                    Toast.makeText(context, error.localizedMessage, Toast.LENGTH_LONG)
+                       .show()
+                } else {
+                    appState.value = appState.value.copy(userLoggedIn = true)
+                }
             }
         }
     }
