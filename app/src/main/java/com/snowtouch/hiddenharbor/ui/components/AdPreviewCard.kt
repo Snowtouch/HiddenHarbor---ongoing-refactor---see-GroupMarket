@@ -1,4 +1,4 @@
-package com.snowtouch.hiddenharbor.ui
+package com.snowtouch.hiddenharbor.ui.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement

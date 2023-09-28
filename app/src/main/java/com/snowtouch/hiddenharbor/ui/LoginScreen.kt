@@ -43,15 +43,15 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.snowtouch.hiddenharbor.R
-import com.snowtouch.hiddenharbor.model.Category
-import com.snowtouch.hiddenharbor.model.Option
-import com.snowtouch.hiddenharbor.viewmodel.LoginScreenViewModel
+import com.snowtouch.hiddenharbor.data.model.Category
+import com.snowtouch.hiddenharbor.data.model.Option
+import com.snowtouch.hiddenharbor.viewmodel.AccountScreenViewModel
 
 @Composable
 fun AccountScreen(
     categories: List<Category>,
     navController: NavHostController,
-    viewModel: LoginScreenViewModel,
+    viewModel: AccountScreenViewModel,
 ) {
     val uiState by viewModel.uiState
     val context = LocalContext.current
@@ -87,9 +87,7 @@ fun AccountScreen(
         else
         {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Column(
-                    modifier = Modifier.weight(0.5f)
-                ) {
+                Column(modifier = Modifier.weight(0.5f)) {
                     LoginBox(
                         uiState.email,
                         viewModel::onEmailChange,
@@ -99,9 +97,7 @@ fun AccountScreen(
                 }
                 ElevatedButton(
                     modifier = Modifier.size(width = 175.dp, height = 50.dp),
-                    onClick = {
-                        viewModel.signIn(uiState.email, uiState.password, context)
-                              },
+                    onClick = { viewModel.signIn(uiState.email, uiState.password, context) },
                     shape = MaterialTheme.shapes.small,
                     colors = ButtonDefaults.buttonColors(),
                     elevation = ButtonDefaults.buttonElevation()
@@ -113,9 +109,7 @@ fun AccountScreen(
                 Spacer(modifier = Modifier.padding(top = 8.dp))
                 ElevatedButton(
                     modifier = Modifier.size(width = 175.dp, height = 50.dp),
-                    onClick = { viewModel.createAccount(uiState.email, uiState.password, context)
-                        //navController.navigate(route = AppRoute.AccountScreen.name)
-                              },
+                    onClick = { viewModel.createAccount(uiState.email, uiState.password, context) },
                     shape = MaterialTheme.shapes.small,
                     colors = ButtonDefaults.buttonColors(),
                     elevation = ButtonDefaults.buttonElevation()
@@ -132,10 +126,9 @@ fun AccountScreen(
                         .weight(1f)
                 ) {
                     CategoryItem(category = categories.last())
-                    val filteredOptions = categories.last().options.filterNot {
-                        option -> option.name == "Account data"
-                    }
-                    filteredOptions.forEach() { option ->
+                    val filteredOptions = categories.last().options.filterNot { option ->
+                        option.name == "Account data" }
+                    filteredOptions.forEach { option ->
                         OptionItem(option = option)
                     }
                 }

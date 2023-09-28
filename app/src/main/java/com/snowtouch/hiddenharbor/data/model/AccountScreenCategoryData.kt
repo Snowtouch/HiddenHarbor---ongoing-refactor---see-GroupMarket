@@ -1,4 +1,4 @@
-package com.snowtouch.hiddenharbor.model
+package com.snowtouch.hiddenharbor.data.model
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Build
@@ -9,19 +9,14 @@ import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.ShoppingCart
-import androidx.compose.ui.graphics.vector.ImageVector
 
-data class Option(val name: String, val icon: ImageVector, val route: String)
-
-data class Category(val name: String, val options: List<Option>)
-
-val categories = listOf(
+val accountScreenCategories = listOf(
     Category(
         name = "Your ads",
         options = listOf(
             Option(name = "Current", icon = Icons.Default.ShoppingCart, route = "current_ads"),
             Option(name = "Finished", icon = Icons.Default.Done, route = "finished_ads"),
-            Option(name = "Drafts", icon = Icons.Default.Build, route = "work_ads")
+            Option(name = "Drafts", icon = Icons.Default.Build, route = "draft_ads")
         )
     ),
     Category(

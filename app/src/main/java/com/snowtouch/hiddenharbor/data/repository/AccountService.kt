@@ -1,4 +1,4 @@
-package com.snowtouch.hiddenharbor.repository
+package com.snowtouch.hiddenharbor.data.repository
 
 interface AccountService {
     fun createAccount(email: String, password: String, onResult: (Throwable?) -> Unit)

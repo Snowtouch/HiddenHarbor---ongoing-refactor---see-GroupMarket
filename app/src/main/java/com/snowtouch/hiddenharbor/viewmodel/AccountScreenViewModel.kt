@@ -4,10 +4,9 @@ import android.content.Context
 import android.widget.Toast
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import com.snowtouch.hiddenharbor.repository.AccountServiceImpl
-import com.snowtouch.hiddenharbor.ui.AppUiState
+import com.snowtouch.hiddenharbor.data.repository.AccountServiceImpl
 
-class LoginScreenViewModel(
+class AccountScreenViewModel(
     private val accountServiceImpl: AccountServiceImpl
 ) : ViewModel() {
     var uiState = mutableStateOf(LoginUiState())

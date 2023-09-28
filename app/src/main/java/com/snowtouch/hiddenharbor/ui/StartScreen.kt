@@ -1,5 +1,6 @@
 package com.snowtouch.hiddenharbor.ui
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -8,16 +9,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AddCircle
-import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -25,6 +20,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -34,12 +30,16 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.snowtouch.hiddenharbor.R
+import com.snowtouch.hiddenharbor.data.model.bottomBarItems
 import com.snowtouch.hiddenharbor.ui.theme.HiddenHarborTheme
+
 
 @Composable
 fun StartScreen(navController: NavHostController){
@@ -61,99 +61,109 @@ fun StartScreenTopBar(
         unfocusedIndicatorColor = Color.Transparent,
         cursorColor = Color.Black
     )
-    CenterAlignedTopAppBar(
-        modifier = modifier
-            .padding(8.dp)
-            .clip(MaterialTheme.shapes.small),
-        title = {
-            TextField(
-                value = "",
-                onValueChange = {},
-                modifier = Modifier
-                    .fillMaxWidth(),
-                label = { Text(text = "Search") },
-                trailingIcon = {
-                    IconButton(
-                        onClick = {/*TODO*/ }
+    Row(modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        TopAppBar(
+            modifier = modifier
+                .padding(12.dp)
+                .clip(MaterialTheme.shapes.small),
+            title = {
+                TextField(
+                    value = "",
+                    onValueChange = {},
+                    modifier = modifier,
+                    label = { Text(text = "Search") },
+                    trailingIcon = {
+                        IconButton(
+                            onClick = {/*TODO*/ }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.Search,
+                                contentDescription = null
+                            )
+                        }
+                    },
+                    shape = MaterialTheme.shapes.small,
+                    colors = textFieldColors
+                )
+
+            },
+            actions = {
+                IconButton(
+                    onClick = { /*TODO*/ },
+                    modifier = modifier.border(1.dp, Color.Black, MaterialTheme.shapes.small)
+                        .size(width = 50.dp, height = 50.dp)
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
                     ) {
                         Icon(
-                            imageVector = Icons.Filled.Search,
-                            contentDescription = null) } },
-                shape = MaterialTheme.shapes.small,
-                colors = textFieldColors
-            )
-        },
-    )
+                            painterResource(R.drawable.baseline_groups_24),
+                            contentDescription = null
+                        )
+                        Text(text = "Groups", fontSize = 12.sp)
+                    }
+                }
+            }
+        )
+
+    }
 }
 @Composable
-fun ApplicationBottomBar(navController: NavHostController) {
+fun ApplicationBottomBar(
+    navController: NavHostController,
+    modifier: Modifier = Modifier
+) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentScreen = navBackStackEntry?.destination?.route
+
     BottomAppBar(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         contentPadding = PaddingValues(2.dp)
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButtonWithText(
-                icon = Icons.Filled.Home,
-                label = "Home",
-                onClick = { navController.navigate(AppRoute.StartScreen.name) },
-                isActive = currentScreen == AppRoute.StartScreen.name
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            IconButtonWithText(
-                icon = Icons.Filled.Favorite,
-                label = "Favorites",
-                onClick = {  },
-                isActive = false
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            IconButtonWithText(
-                icon = Icons.Filled.AddCircle,
-                label = "Add",
-                onClick = {  },
-                isActive = false
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            IconButtonWithText(
-                icon = Icons.Filled.Email,
-                label = "Messages",
-                onClick = {  },
-                isActive = false
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            IconButtonWithText(
-                icon = Icons.Filled.Person,
-                label = "Account",
-                onClick = { navController.navigate(AppRoute.AccountScreen.name) },
-                isActive = currentScreen == AppRoute.AccountScreen.name
-            )
+            bottomBarItems.forEach { bottomBarItem ->
+                IconButtonWithText(
+                    icon = bottomBarItem.icon,
+                    label = bottomBarItem.label,
+                    onClick = { bottomBarItem.route?.let { navController.navigate(bottomBarItem.route) } },
+                    isActive = currentScreen == bottomBarItem.route,
+                    modifier = modifier
+                )
+                Spacer(modifier = modifier.padding(8.dp))
+            }
         }
     }
+
 }
+
 @Composable
 fun IconButtonWithText(
     icon: ImageVector,
     label: String,
     onClick: () -> Unit,
-    isActive: Boolean
+    isActive: Boolean,
+    modifier: Modifier
 ) {
     IconButton(
         onClick = onClick,
-        modifier = Modifier.defaultMinSize(minWidth = 65.dp),
+        modifier = modifier.defaultMinSize(minWidth = 65.dp),
         content = {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
+                modifier = modifier
             ) {
                 Icon(
                     imageVector = icon,
                     contentDescription = label,
-                    modifier = Modifier.alpha(if (isActive) 1f else 0.6f)
+                    modifier = modifier.alpha(if (isActive) 1f else 0.6f)
                 )
                 Text(text = label, fontSize = 12.sp)
             }
