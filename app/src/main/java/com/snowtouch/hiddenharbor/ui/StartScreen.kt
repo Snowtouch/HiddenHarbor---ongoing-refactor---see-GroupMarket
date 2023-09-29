@@ -90,26 +90,32 @@ fun StartScreenTopBar(
                 )
 
             },
-            actions = {
-                IconButton(
-                    onClick = { /*TODO*/ },
-                    modifier = modifier.border(1.dp, Color.Black, MaterialTheme.shapes.small)
-                        .size(width = 50.dp, height = 50.dp)
-                ) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        Icon(
-                            painterResource(R.drawable.baseline_groups_24),
-                            contentDescription = null
-                        )
-                        Text(text = "Groups", fontSize = 12.sp)
-                    }
-                }
-            }
+            actions = { GroupsButton(onClick = { /*TODO*/ }) }
         )
 
+    }
+}
+@Composable
+fun GroupsButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    IconButton(
+        onClick = onClick,
+        modifier = modifier
+            .border(1.dp, Color.Black, MaterialTheme.shapes.small)
+            .size(width = 50.dp, height = 50.dp)
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Icon(
+                painterResource(R.drawable.baseline_groups_24),
+                contentDescription = null
+            )
+            Text(text = "Groups", fontSize = 12.sp)
+        }
     }
 }
 @Composable

@@ -11,12 +11,10 @@ val firebaseModule = module {
 
     single {
         if (isFirebaseLocal) {
-            FirebaseDatabase.getInstance("http://10.0.2.2:9000?ns=xxxx")
+            FirebaseDatabase.getInstance("http://10.0.2.2:9299?ns=xxxx")
         } else {
             FirebaseDatabase.getInstance()
         }
-        //val database = Firebase.database
-        //database.useEmulator("10.0.2.2", 9000)
     }
     single {
         val auth = FirebaseAuth.getInstance()
