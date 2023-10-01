@@ -11,10 +11,10 @@ import com.snowtouch.hiddenharbor.ui.StartScreen
 import com.snowtouch.hiddenharbor.viewmodel.AccountScreenViewModel
 import com.snowtouch.hiddenharbor.viewmodel.GroupScreenViewModel
 
-enum class AppRoute(val title: String){
-    StartScreen(title = "Home"),
-    AccountScreen(title = "Account"),
-    GroupScreen(title = "Group")
+enum class AppRoute() {
+    StartScreen,
+    AccountScreen,
+    GroupScreen
 }
 @Composable
 fun NavigationComponent(
@@ -23,13 +23,19 @@ fun NavigationComponent(
 ) {
     NavHost(navController = navController, startDestination = AppRoute.StartScreen.name) {
         composable(route = AppRoute.StartScreen.name) {
+            CurrentScreen.name = AppRoute.StartScreen.name
             StartScreen(navController)
         }
         composable(route = AppRoute.AccountScreen.name) {
-            AccountScreen(categories = accountScreenCategories, navController, accountScreenViewModel)
+            CurrentScreen.name = AppRoute.AccountScreen.name
+            AccountScreen(accountScreenCategories, navController, accountScreenViewModel)
         }
         composable(route = AppRoute.GroupScreen.name) {
+            CurrentScreen.name = AppRoute.GroupScreen.name
             GroupScreen(GroupScreenViewModel(), navController)
         }
     }
+}
+object CurrentScreen {
+    var name: String? = null
 }

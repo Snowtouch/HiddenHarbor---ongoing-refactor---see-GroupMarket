@@ -9,6 +9,7 @@ plugins {
 sonar {
     properties {
         property("sonar.projectKey", "HiddenHarbor")
+        property("sonar.projectName", "HiddenHarbor")
         property("sonar.organization", "")
         property("sonar.host.url", "http://localhost:9000")
     }

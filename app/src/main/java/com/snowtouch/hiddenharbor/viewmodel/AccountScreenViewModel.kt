@@ -11,8 +11,7 @@ class AccountScreenViewModel(
 ) : ViewModel() {
     var uiState = mutableStateOf(LoginUiState())
         private set
-    var appState = mutableStateOf(AppUiState())
-        private set
+    val userLoggedInState = UserState.userLoggedIn
 
     private fun clearEmailAndPasswordFields(){
         uiState.value = uiState.value.copy(email = "", password = "")
@@ -38,7 +37,6 @@ class AccountScreenViewModel(
                 }
             }
         }
-
     }
     fun signIn(email: String, password: String, context: Context) {
         if (checkCredentials(email, password)) {
@@ -50,14 +48,14 @@ class AccountScreenViewModel(
                     Toast.makeText(context, error.localizedMessage, Toast.LENGTH_LONG)
                        .show()
                 } else {
-                    appState.value = appState.value.copy(userLoggedIn = true)
+                    UserState.setUserLoggedIn(true)
                 }
             }
         }
     }
     fun signOut(){
         accountServiceImpl.signOut()
-        appState.value = appState.value.copy(userLoggedIn = false)
+        UserState.setUserLoggedIn(false)
         clearEmailAndPasswordFields()
     }
 }

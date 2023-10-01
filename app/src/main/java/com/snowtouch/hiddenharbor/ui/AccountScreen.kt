@@ -1,17 +1,17 @@
 package com.snowtouch.hiddenharbor.ui
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
@@ -28,23 +28,28 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.snowtouch.hiddenharbor.R
 import com.snowtouch.hiddenharbor.data.model.Category
 import com.snowtouch.hiddenharbor.data.model.Option
+import com.snowtouch.hiddenharbor.data.model.accountScreenCategories
+import com.snowtouch.hiddenharbor.ui.components.ApplicationBottomBar
 import com.snowtouch.hiddenharbor.viewmodel.AccountScreenViewModel
 
 @Composable
@@ -55,80 +60,93 @@ fun AccountScreen(
 ) {
     val uiState by viewModel.uiState
     val context = LocalContext.current
-    val appState by viewModel.appState
+    val userLoggedIn by viewModel.userLoggedInState.collectAsState()
+    val scrollState = rememberScrollState()
 
     Scaffold(
+        modifier = Modifier,
         bottomBar = { ApplicationBottomBar(navController) }
     ) { innerPadding ->
-        if (appState.userLoggedIn)
+        if (userLoggedIn)
             Column(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .background(color = MaterialTheme.colorScheme.background)
+                    .verticalScroll(scrollState)
+                    .fillMaxWidth()
+                    //.background(color = MaterialTheme.colorScheme.background)
                     .padding(innerPadding)
                     .padding(24.dp)
             ) {
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
+                ) {
                     ElevatedButton(
-                        onClick = { viewModel.signOut()
-                        //navController.navigate(route = AppRoute.AccountScreen.name)
-                        }
+                        onClick = { viewModel.signOut() },
+                        modifier = Modifier.size(width = 100.dp, height = 50.dp),
+                        shape = MaterialTheme.shapes.small,
+                        colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary)
                     ) {
-                        Text(text = "Sign out")
+                        Text(
+                            text = "Logout",
+                            color = MaterialTheme.colorScheme.onPrimary,
+                            fontWeight = FontWeight.Bold
+                        )
                     }
                 }
                 categories.forEach { category ->
                     CategoryItem(category = category)
-                    category.options.forEach { option ->
+                    category.options?.forEach { option ->
                         OptionItem(option = option)
                     }
                 }
             }
         else
         {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Column(modifier = Modifier.weight(0.5f)) {
-                    LoginBox(
-                        uiState.email,
-                        viewModel::onEmailChange,
-                        uiState.password,
-                        viewModel::onPasswordChange
-                    )
-                }
+            Column(
+                modifier = Modifier.verticalScroll(scrollState),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                LoginBox(
+                    uiState.email,
+                    viewModel::onEmailChange,
+                    uiState.password,
+                    viewModel::onPasswordChange
+                )
                 ElevatedButton(
                     modifier = Modifier.size(width = 175.dp, height = 50.dp),
                     onClick = { viewModel.signIn(uiState.email, uiState.password, context) },
                     shape = MaterialTheme.shapes.small,
-                    colors = ButtonDefaults.buttonColors(),
-                    elevation = ButtonDefaults.buttonElevation()
+                    colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary)
                 ) {
                     Text(
                         text = "Login",
-                        color = Color.White)
+                        color = MaterialTheme.colorScheme.onPrimary,
+                        fontWeight = FontWeight.Bold
+                    )
                 }
                 Spacer(modifier = Modifier.padding(top = 8.dp))
                 ElevatedButton(
                     modifier = Modifier.size(width = 175.dp, height = 50.dp),
                     onClick = { viewModel.createAccount(uiState.email, uiState.password, context) },
                     shape = MaterialTheme.shapes.small,
-                    colors = ButtonDefaults.buttonColors(),
-                    elevation = ButtonDefaults.buttonElevation()
+                    colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary)
                 ) {
                     Text(
-                        text = "Register",
-                        color = Color.White)
+                        text = "Sign up",
+                        color = MaterialTheme.colorScheme.onPrimary,
+                        fontWeight = FontWeight.Bold
+                    )
                 }
                 Column(
                     modifier = Modifier
-                        .background(color = MaterialTheme.colorScheme.background)
                         .padding(innerPadding)
                         .padding(24.dp)
-                        .weight(1f)
                 ) {
                     CategoryItem(category = categories.last())
-                    val filteredOptions = categories.last().options.filterNot { option ->
+                    val filteredOptions = categories.last().options?.filterNot { option ->
                         option.name == "Account data" }
-                    filteredOptions.forEach { option ->
+                    filteredOptions?.forEach { option ->
                         OptionItem(option = option)
                     }
                 }
@@ -146,15 +164,16 @@ fun LoginBox(
 ) {
     val showPassword = remember { mutableStateOf(false) }
     Column(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(top = 16.dp, bottom = 16.dp),
         verticalArrangement = Arrangement.SpaceEvenly,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         ElevatedCard(
             modifier = Modifier,
             shape = RoundedCornerShape(12.dp),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
-            elevation = CardDefaults.cardElevation()
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
         ) {
             Column(modifier.padding(24.dp)) {
                 OutlinedTextField(
@@ -172,7 +191,7 @@ fun LoginBox(
                         keyboardType = KeyboardType.Email,
                         imeAction = ImeAction.Next
                     ),
-                    colors = TextFieldDefaults.outlinedTextFieldColors(containerColor = Color.White)
+                    colors = TextFieldDefaults.textFieldColors(containerColor = MaterialTheme.colorScheme.background)
                 )
                 Spacer(modifier = modifier.height(8.dp))
                 OutlinedTextField(
@@ -193,7 +212,6 @@ fun LoginBox(
                             else R.drawable.baseline_visibility_off_24), contentDescription = null)
 
                         }
-
                     },
                     singleLine = true,
                     visualTransformation = if (showPassword.value) VisualTransformation.None else PasswordVisualTransformation(),
@@ -201,7 +219,7 @@ fun LoginBox(
                         keyboardType = KeyboardType.Password,
                         imeAction = ImeAction.Done
                     ),
-                    colors = TextFieldDefaults.outlinedTextFieldColors(containerColor = Color.White)
+                    colors = TextFieldDefaults.textFieldColors(containerColor = MaterialTheme.colorScheme.background)
                 )
             }
         }
@@ -222,19 +240,18 @@ fun OptionItem(option: Option) {
             .size(height = 48.dp, width = 300.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Icon(imageVector = option.icon, contentDescription = null)
+        if (option.icon != null) {Icon(imageVector = option.icon, contentDescription = null)}
         Spacer(modifier = Modifier.padding(6.dp))
         Text(text = option.name, style = MaterialTheme.typography.titleMedium)
     }
     Divider()
 }
-/*@Preview
+@Preview
 @Composable
 fun AccountScreenPreview() {
-    val loginScreenViewModel: LoginScreenViewModel
-    AccountScreen(
-        categories,
+    val accountScreenViewModel: AccountScreenViewModel = viewModel()
+    AccountScreen( accountScreenCategories,
         navController = NavHostController(LocalContext.current),
-        viewModel = loginScreenViewModel
+        viewModel = accountScreenViewModel
     )
-}*/
+}
