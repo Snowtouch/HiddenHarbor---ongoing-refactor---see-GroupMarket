@@ -11,6 +11,15 @@ This application is designed to enable users to post anonymous advertisements an
 - Communicating with other users.
 - Creating closed advertisement groups.
 
+## Tech stack
+- Android SDK
+- Kotlin
+- Jetpack: Compose, Navigation, Coroutines, Material3
+- Firebase: Storage, Realtime Database, Auth, InAppMessaging
+- Koin for DI
+- JUnit5 for unit testing
+- SonarQube for auto code review
+
 ## Overview
 
 To use the application and its features, follow these instructions:
