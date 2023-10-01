@@ -17,7 +17,6 @@ import com.snowtouch.hiddenharbor.viewmodel.UserState
 import org.koin.android.ext.android.get
 
 class MainActivity : ComponentActivity() {
-    //private  val firebaseAuth: FirebaseAuth by inject()
     private lateinit var accountScreenViewModel: AccountScreenViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {

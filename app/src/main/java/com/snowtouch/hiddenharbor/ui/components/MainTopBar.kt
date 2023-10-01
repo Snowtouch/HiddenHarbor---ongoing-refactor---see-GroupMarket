@@ -38,7 +38,6 @@ fun MainTopBar(
 
 ) {
     val textFieldColors = TextFieldDefaults.textFieldColors(
-        //containerColor = MaterialTheme.colorScheme.primaryContainer,
         focusedIndicatorColor = Color.Black,
         unfocusedIndicatorColor = Color.Transparent,
         cursorColor = Color.Black

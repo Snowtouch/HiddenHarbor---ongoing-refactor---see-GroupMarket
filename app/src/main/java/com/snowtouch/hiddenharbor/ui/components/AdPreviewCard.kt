@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -26,10 +27,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.snowtouch.hiddenharbor.R
+import com.snowtouch.hiddenharbor.data.model.Ad
+import com.snowtouch.hiddenharbor.sampledata.sampleAd
 
 @Composable
-fun AdPreviewCard(
-    ) {
+fun AdPreviewCard(ad: Ad) {
     Card(
         onClick = {},
         modifier = Modifier
@@ -37,14 +39,14 @@ fun AdPreviewCard(
         Column(modifier = Modifier.padding(8.dp)) {
             Box(modifier = Modifier) {
                 Image(
-                    painterResource(R.drawable.sample_ad_image),
+                    painterResource(R.drawable.no_image),
                     contentDescription = null,
                     modifier = Modifier.clip(MaterialTheme.shapes.small),
                     contentScale = ContentScale.Fit)
             }
             Box(modifier = Modifier.fillMaxWidth()) {
                 Text(
-                    text = "Advertisement description ",
+                    text = ad.title,
                     modifier = Modifier.padding(12.dp),
                     fontSize = 20.sp,
                     overflow = TextOverflow.Clip,
@@ -58,7 +60,7 @@ fun AdPreviewCard(
                 verticalAlignment = Alignment.Bottom
             ) {
                 Text(
-                    text = "800$",
+                    text = ad.getFormattedPrice(),
                     modifier = Modifier.padding(8.dp),
                     fontWeight = FontWeight.Bold,
                     fontSize = 24.sp
@@ -70,20 +72,20 @@ fun AdPreviewCard(
                     IconButton(onClick = { /*TODO*/ }) {
                         Icon(
                             imageVector = Icons.Outlined.FavoriteBorder,
-                            contentDescription = null
+                            contentDescription = null,
+                            modifier = Modifier.fillMaxSize()
                         )
                     }
                     Text(
-                        text = "12-08-2023",
+                        text = ad.datePosted,
                     )
                 }
             }
-
         }
     }
 }
 @Preview
 @Composable
 fun CardPreview(){
-    AdPreviewCard()
+    AdPreviewCard(sampleAd)
 }
