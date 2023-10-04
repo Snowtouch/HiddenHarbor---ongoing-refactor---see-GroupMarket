@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -31,8 +32,9 @@ import androidx.navigation.NavHostController
 import com.snowtouch.hiddenharbor.R
 
 @Composable
-fun MainTopBar(
+fun TopBar(
     title: String? = null,
+    caNavigateBack: Boolean = false,
     navController: NavHostController,
     searchFieldVisible: Boolean,
 
@@ -46,6 +48,17 @@ fun MainTopBar(
         modifier = Modifier
             .padding(12.dp)
             .clip(MaterialTheme.shapes.small),
+        navigationIcon = {
+            if (caNavigateBack)
+                IconButton(
+                    onClick = { navController.popBackStack() }
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.ArrowBack,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary)
+                }
+        },
         title = {
             if (searchFieldVisible) {
                 TextField(
@@ -76,15 +89,8 @@ fun MainTopBar(
             }
         },
         actions = {
-            GroupsButton(
-                onClick = {
-                    if (CurrentScreen.name != AppRoute.GroupScreen.name) {
-                        navController.navigate(AppRoute.GroupScreen.name)
-                    } else {
-                        navController.popBackStack()
-                    }
-                }
-            )
+            if (CurrentScreen.name == AppRoute.StartScreen.name)
+                GroupsButton(onClick = { navController.navigate(AppRoute.GroupScreen.name) })
         }
     )
 }
@@ -120,5 +126,5 @@ fun GroupsButton(
 @Composable
 fun MainTopBarPreview(){
     val navController = NavHostController(LocalContext.current)
-    MainTopBar(navController = navController, searchFieldVisible = false)
+    TopBar(navController = navController, searchFieldVisible = false)
 }

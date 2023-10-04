@@ -4,6 +4,7 @@ import java.text.DecimalFormat
 
 
 data class Ad(
+    val adId: String = "",
     val authorUid: String? = null,
     val title: String = "",
     val description: String? = null,
@@ -13,6 +14,7 @@ data class Ad(
     val location: String? = null,
     val datePosted: String = "",
     val photoUrls: List<String>? = null,
+    val isFavorite: Boolean = false,
     val privacyLevel: AdPrivacyLevel? = null,
     val adStatus: AdStatus? = null
 ) {

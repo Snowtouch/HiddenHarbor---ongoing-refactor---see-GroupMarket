@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.snowtouch.hiddenharbor.ui.components.AppRoute
 import com.snowtouch.hiddenharbor.ui.components.ApplicationBottomBar
-import com.snowtouch.hiddenharbor.ui.components.MainTopBar
+import com.snowtouch.hiddenharbor.ui.components.TopBar
 import com.snowtouch.hiddenharbor.viewmodel.GroupScreenViewModel
 
 @Composable
@@ -33,7 +33,7 @@ fun GroupScreen(
     Scaffold(
         modifier = Modifier,
         bottomBar = { ApplicationBottomBar(navController) },
-        topBar = { MainTopBar("Groups",navController, searchFieldVisible = false)
+        topBar = { TopBar( caNavigateBack = true, navController = navController, searchFieldVisible = false)
         }
     ) { innerPadding ->
         if (!userLoggedIn) {

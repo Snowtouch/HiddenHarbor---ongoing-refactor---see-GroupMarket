@@ -15,7 +15,6 @@ import com.snowtouch.hiddenharbor.ui.theme.HiddenHarborTheme
 import com.snowtouch.hiddenharbor.viewmodel.AccountScreenViewModel
 import com.snowtouch.hiddenharbor.viewmodel.UserState
 import org.koin.android.ext.android.get
-
 class MainActivity : ComponentActivity() {
     private lateinit var accountScreenViewModel: AccountScreenViewModel
 
@@ -30,7 +29,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val navController = rememberNavController()
-                    NavigationComponent(navController = navController, accountScreenViewModel)
+                    NavigationComponent(navController = navController, accountScreenViewModel = accountScreenViewModel)
                 }
             }
         }
@@ -40,7 +39,7 @@ class MainActivity : ComponentActivity() {
         super.onStart()
         val firebaseAuth: FirebaseAuth = get()
         if (firebaseAuth.currentUser != null) {
-            UserState.setUserLoggedIn(true)
+            UserState().setUserLoggedIn(true)
         }
     }
 }

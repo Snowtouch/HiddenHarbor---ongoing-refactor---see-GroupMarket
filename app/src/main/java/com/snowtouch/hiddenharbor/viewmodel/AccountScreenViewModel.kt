@@ -37,6 +37,7 @@ class AccountScreenViewModel(
                 }
             }
         }
+
     }
     fun signIn(email: String, password: String, context: Context) {
         if (checkCredentials(email, password)) {

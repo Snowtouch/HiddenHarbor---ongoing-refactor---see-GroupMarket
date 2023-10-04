@@ -64,7 +64,7 @@ dependencies {
     implementation("androidx.compose.material3:material3")
     implementation("androidx.navigation:navigation-runtime-ktx:2.7.3")
     implementation("androidx.navigation:navigation-compose:2.7.3")
-    implementation("androidx.compose.material:material:1.5.1")
+    implementation("androidx.compose.material:material:1.5.2")
 
     implementation(platform("com.google.firebase:firebase-bom:32.2.3"))
     implementation("com.google.firebase:firebase-analytics-ktx")

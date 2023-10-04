@@ -9,14 +9,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import com.snowtouch.hiddenharbor.ui.components.ApplicationBottomBar
-import com.snowtouch.hiddenharbor.ui.components.MainTopBar
+import com.snowtouch.hiddenharbor.ui.components.TopBar
 import com.snowtouch.hiddenharbor.ui.theme.HiddenHarborTheme
 
 
 @Composable
 fun StartScreen(navController: NavHostController){
     Scaffold(
-        topBar = { MainTopBar(navController = navController, searchFieldVisible = true) },
+        topBar = { TopBar(navController = navController, searchFieldVisible = true) },
         bottomBar = { ApplicationBottomBar(navController) }
     ) { innerPadding ->
         Column(modifier = Modifier.padding(innerPadding)) {

@@ -16,11 +16,11 @@ import com.snowtouch.hiddenharbor.sampledata.sampleCardList
 
 @Composable
 fun AdListComponent(
-    adList: List<Ad>,
+    adList: List<Ad>?,
     modifier: Modifier = Modifier
 ) {
-
     val gridState = rememberLazyGridState()
+
     LazyVerticalGrid(
         columns = GridCells.Adaptive(175.dp),
         modifier = modifier.fillMaxWidth(),
@@ -29,10 +29,7 @@ fun AdListComponent(
         verticalArrangement = Arrangement.spacedBy(4.dp),
         horizontalArrangement = Arrangement.spacedBy(4.dp),
     ) {
-        items(adList) { item ->
-            AdPreviewCard(ad = item)
-
-        }
+        items(adList?: emptyList()) { item -> AdPreviewCard(ad = item) }
     }
 }
 @Preview
