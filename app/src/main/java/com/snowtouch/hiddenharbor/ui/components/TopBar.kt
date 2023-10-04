@@ -70,12 +70,8 @@ fun TopBar(
                         IconButton(
                             onClick = {  }
                         ) {
-                            Icon(
-                                imageVector = Icons.Filled.Search,
-                                contentDescription = null
-                            )
-                        }
-                                   },
+                            Icon(imageVector = Icons.Filled.Search, contentDescription = null)
+                        } },
                     shape = MaterialTheme.shapes.small,
                     colors = textFieldColors
                 )

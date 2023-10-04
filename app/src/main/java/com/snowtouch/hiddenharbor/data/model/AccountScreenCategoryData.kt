@@ -9,6 +9,7 @@ import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.ui.graphics.vector.ImageVector
 
 val accountScreenCategories = listOf(
     Category(
@@ -34,4 +35,13 @@ val accountScreenCategories = listOf(
             Option(name = "About", icon = Icons.Default.Info, route = "about_app")
         )
     )
+)
+data class Option(
+    val name: String,
+    val icon: ImageVector?,
+    val route: String
+)
+data class Category(
+    val name: String,
+    val options: List<Option>?
 )

@@ -9,8 +9,8 @@ import org.koin.core.context.startKoin
 class MainApplication : Application() {
     override fun onCreate() {
         super.onCreate()
-
-        if (!isFirebaseLocal) {
+        isFirebaseLocal = true
+        if (isFirebaseLocal) {
             startKoin {
                 androidContext(this@MainApplication)
                 modules(firebaseModule)

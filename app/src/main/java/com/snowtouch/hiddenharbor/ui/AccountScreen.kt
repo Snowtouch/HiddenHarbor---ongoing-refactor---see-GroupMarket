@@ -60,19 +60,18 @@ fun AccountScreen(
 ) {
     val uiState by viewModel.uiState
     val context = LocalContext.current
-    val userLoggedIn by viewModel.userLoggedInState.collectAsState()
+    val user by viewModel.user.collectAsState()
     val scrollState = rememberScrollState()
 
     Scaffold(
         modifier = Modifier,
         bottomBar = { ApplicationBottomBar(navController) }
     ) { innerPadding ->
-        if (userLoggedIn)
+        if (user.userLoggedIn)
             Column(
                 modifier = Modifier
                     .verticalScroll(scrollState)
                     .fillMaxWidth()
-                    //.background(color = MaterialTheme.colorScheme.background)
                     .padding(innerPadding)
                     .padding(24.dp)
             ) {

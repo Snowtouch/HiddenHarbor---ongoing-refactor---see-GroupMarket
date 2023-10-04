@@ -9,6 +9,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import com.snowtouch.hiddenharbor.data.repository.AccountServiceImpl
 import com.snowtouch.hiddenharbor.ui.components.NavigationComponent
 import com.snowtouch.hiddenharbor.ui.theme.HiddenHarborTheme
@@ -19,7 +20,7 @@ class MainActivity : ComponentActivity() {
     private lateinit var accountScreenViewModel: AccountScreenViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        accountScreenViewModel = AccountScreenViewModel(AccountServiceImpl(get()))
+        accountScreenViewModel = AccountScreenViewModel(get(),AccountServiceImpl(get()))
 
         super.onCreate(savedInstanceState)
         setContent {
@@ -38,8 +39,9 @@ class MainActivity : ComponentActivity() {
     public override fun onStart() {
         super.onStart()
         val firebaseAuth: FirebaseAuth = get()
+        val firebaseDatabase: FirebaseDatabase = get()
         if (firebaseAuth.currentUser != null) {
-            UserState().setUserLoggedIn(true)
-        }
+            UserState.setUserLoggedIn(true)
+        } else {UserState.setUserLoggedIn(false)}
     }
 }

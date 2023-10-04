@@ -55,7 +55,6 @@ fun ApplicationBottomBar(
             }
         }
     }
-
 }
 
 @Composable

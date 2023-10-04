@@ -4,6 +4,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import com.snowtouch.hiddenharbor.viewmodel.AccountScreenViewModel
+import com.snowtouch.hiddenharbor.viewmodel.FavoritesScreenViewModel
+import com.snowtouch.hiddenharbor.viewmodel.UserState
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -13,7 +15,7 @@ val firebaseModule = module {
         if (isFirebaseLocal) {
             FirebaseDatabase.getInstance("http://10.0.2.2:9299?ns=xxxx")
         } else {
-            FirebaseDatabase.getInstance()
+            FirebaseDatabase.getInstance("https://xxxx-default-rtdb.europe-west1.firebasedatabase.app")
         }
     }
     single {
@@ -30,6 +32,9 @@ val firebaseModule = module {
             FirebaseStorage.getInstance()
         }
     }
-    viewModel { AccountScreenViewModel(get()) }
+    single { UserState }
+    viewModel { AccountScreenViewModel(get(), get()) }
+    viewModel { FavoritesScreenViewModel(get())}
+
 }
 var isFirebaseLocal = false

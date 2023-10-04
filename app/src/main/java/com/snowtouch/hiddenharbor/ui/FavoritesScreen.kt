@@ -3,6 +3,8 @@ package com.snowtouch.hiddenharbor.ui
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
@@ -12,24 +14,34 @@ import com.snowtouch.hiddenharbor.sampledata.sampleCardList
 import com.snowtouch.hiddenharbor.ui.components.AdListComponent
 import com.snowtouch.hiddenharbor.ui.components.ApplicationBottomBar
 import com.snowtouch.hiddenharbor.ui.components.TopBar
+import com.snowtouch.hiddenharbor.ui.components.UserNotLoggedScreenContent
+import com.snowtouch.hiddenharbor.viewmodel.FavoritesScreenViewModel
+import com.snowtouch.hiddenharbor.viewmodel.UserState
 
 @Composable
 fun FavoritesScreen(
     adList: List<Ad>?,
-    navController: NavHostController
-){
+    navController: NavHostController,
+    viewModel: FavoritesScreenViewModel
+) {
+    val user by viewModel.user.collectAsState()
+
     Scaffold(
         modifier = Modifier,
         topBar = { 
             TopBar(caNavigateBack = true, navController = navController, searchFieldVisible = false) },
         bottomBar = { ApplicationBottomBar(navController = navController)},
-    ) { paddingValues ->  
-        AdListComponent(adList = adList, modifier = Modifier.padding(paddingValues))
+    ) { paddingValues ->
+        if (user.userLoggedIn) {
+            AdListComponent(adList = adList, modifier = Modifier.padding(paddingValues))
+        } else {
+            UserNotLoggedScreenContent(paddingValues = paddingValues, navController = navController)
+        }
     }
 }
 @Preview
 @Composable
 fun FavoritesScreenPreview(){
     val navController = NavHostController(LocalContext.current)
-    FavoritesScreen(sampleCardList, navController)
+    FavoritesScreen(sampleCardList, navController, FavoritesScreenViewModel(UserState))
 }

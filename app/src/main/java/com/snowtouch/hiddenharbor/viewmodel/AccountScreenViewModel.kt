@@ -4,14 +4,19 @@ import android.content.Context
 import android.widget.Toast
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import com.snowtouch.hiddenharbor.data.model.User
 import com.snowtouch.hiddenharbor.data.repository.AccountServiceImpl
+import com.snowtouch.hiddenharbor.data.repository.RealtimeDatabaseService
+import kotlinx.coroutines.flow.StateFlow
 
 class AccountScreenViewModel(
-    private val accountServiceImpl: AccountServiceImpl
+    private val userState: UserState,
+    private val accountServiceImpl: AccountServiceImpl,
+    private val realtimeDatabaseService: RealtimeDatabaseService
 ) : ViewModel() {
     var uiState = mutableStateOf(LoginUiState())
         private set
-    val userLoggedInState = UserState.userLoggedIn
+    val user: StateFlow<User> = userState.user
 
     private fun clearEmailAndPasswordFields(){
         uiState.value = uiState.value.copy(email = "", password = "")
@@ -36,6 +41,12 @@ class AccountScreenViewModel(
                         .show()
                 }
             }
+            realtimeDatabaseService.createUserData(userState.user.value) { error ->
+                if (error!=null) {
+                    Toast.makeText(context, error.localizedMessage, Toast.LENGTH_LONG)
+                        .show()
+                }
+            }
         }
 
     }
@@ -49,14 +60,14 @@ class AccountScreenViewModel(
                     Toast.makeText(context, error.localizedMessage, Toast.LENGTH_LONG)
                        .show()
                 } else {
-                    UserState.setUserLoggedIn(true)
+                    userState.setUserLoggedIn(true)
                 }
             }
         }
     }
     fun signOut(){
         accountServiceImpl.signOut()
-        UserState.setUserLoggedIn(false)
+        userState.setUserLoggedIn(false)
         clearEmailAndPasswordFields()
     }
 }

@@ -5,7 +5,7 @@ import java.text.DecimalFormat
 
 data class Ad(
     val adId: String = "",
-    val authorUid: String? = null,
+    val userId: String? = null,
     val title: String = "",
     val description: String? = null,
     val price: Double? = null,
