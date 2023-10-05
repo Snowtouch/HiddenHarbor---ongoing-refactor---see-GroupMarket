@@ -3,9 +3,15 @@ package com.snowtouch.hiddenharbor.data.repository
 import com.google.firebase.auth.FirebaseAuth
 
 class AccountServiceImpl(private val firebaseAuth: FirebaseAuth): AccountService {
-    override fun createAccount(email: String, password: String, onResult: (Throwable?) -> Unit){
+    override fun createAccount(email: String, password: String, onResult: (String?, Throwable?) -> Unit){
         firebaseAuth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener { onResult(it.exception) }
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    onResult(firebaseAuth.currentUser?.uid, null)
+                } else {
+                    onResult(null, task.exception)
+                }
+            }
     }
 
     override fun authenticate(email: String, password: String, onResult: (Throwable?) -> Unit) {

@@ -22,13 +22,14 @@ fun GroupScreen(
     navController: NavHostController
 ) {
     val user by viewModel.user.collectAsState()
+    val userLoggedIn by viewModel.userLoggedIn.collectAsState()
     Scaffold(
         modifier = Modifier,
         bottomBar = { ApplicationBottomBar(navController) },
         topBar = { TopBar( caNavigateBack = true, navController = navController, searchFieldVisible = false)
         }
     ) { innerPadding ->
-        if (user.userLoggedIn) {
+        if (userLoggedIn) {
             Text(text = "User logged in")
         } else {
             UserNotLoggedScreenContent(paddingValues = innerPadding, navController = navController)

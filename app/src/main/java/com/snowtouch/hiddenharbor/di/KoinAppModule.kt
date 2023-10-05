@@ -3,6 +3,7 @@ package com.snowtouch.hiddenharbor.di
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
+import com.snowtouch.hiddenharbor.data.repository.RealtimeDatabaseServiceImpl
 import com.snowtouch.hiddenharbor.viewmodel.AccountScreenViewModel
 import com.snowtouch.hiddenharbor.viewmodel.FavoritesScreenViewModel
 import com.snowtouch.hiddenharbor.viewmodel.UserState
@@ -32,8 +33,9 @@ val firebaseModule = module {
             FirebaseStorage.getInstance()
         }
     }
+    single { RealtimeDatabaseServiceImpl(get()) }
     single { UserState }
-    viewModel { AccountScreenViewModel(get(), get()) }
+    viewModel { AccountScreenViewModel(get(), get(), get()) }
     viewModel { FavoritesScreenViewModel(get())}
 
 }

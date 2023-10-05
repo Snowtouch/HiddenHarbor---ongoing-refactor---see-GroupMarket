@@ -25,6 +25,7 @@ fun FavoritesScreen(
     viewModel: FavoritesScreenViewModel
 ) {
     val user by viewModel.user.collectAsState()
+    val userLoggedIn by viewModel.userLoggedIn.collectAsState()
 
     Scaffold(
         modifier = Modifier,
@@ -32,7 +33,7 @@ fun FavoritesScreen(
             TopBar(caNavigateBack = true, navController = navController, searchFieldVisible = false) },
         bottomBar = { ApplicationBottomBar(navController = navController)},
     ) { paddingValues ->
-        if (user.userLoggedIn) {
+        if (userLoggedIn) {
             AdListComponent(adList = adList, modifier = Modifier.padding(paddingValues))
         } else {
             UserNotLoggedScreenContent(paddingValues = paddingValues, navController = navController)

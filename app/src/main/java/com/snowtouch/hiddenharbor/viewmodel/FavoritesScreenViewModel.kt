@@ -6,4 +6,5 @@ import kotlinx.coroutines.flow.StateFlow
 
 class FavoritesScreenViewModel (private val userState: UserState) : ViewModel() {
     val user: StateFlow<User> = userState.user
+    val userLoggedIn: StateFlow<Boolean> = userState.userLoggedIn
 }

@@ -61,13 +61,14 @@ fun AccountScreen(
     val uiState by viewModel.uiState
     val context = LocalContext.current
     val user by viewModel.user.collectAsState()
+    val userLoggedIn by viewModel.userLoggedIn.collectAsState()
     val scrollState = rememberScrollState()
 
     Scaffold(
         modifier = Modifier,
         bottomBar = { ApplicationBottomBar(navController) }
     ) { innerPadding ->
-        if (user.userLoggedIn)
+        if (userLoggedIn)
             Column(
                 modifier = Modifier
                     .verticalScroll(scrollState)
@@ -114,7 +115,7 @@ fun AccountScreen(
                 )
                 ElevatedButton(
                     modifier = Modifier.size(width = 175.dp, height = 50.dp),
-                    onClick = { viewModel.signIn(uiState.email, uiState.password, context) },
+                    onClick = { viewModel.login(uiState.email, uiState.password, context) },
                     shape = MaterialTheme.shapes.small,
                     colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary)
                 ) {

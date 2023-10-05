@@ -1,7 +1,6 @@
 package com.snowtouch.hiddenharbor.data.model
 
 data class User(
-    val userLoggedIn: Boolean = false,
     val uniqueId: String = "",
     val email: String = "",
     val ads: List<Ad> = emptyList(),

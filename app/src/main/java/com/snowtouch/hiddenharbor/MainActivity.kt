@@ -20,7 +20,7 @@ class MainActivity : ComponentActivity() {
     private lateinit var accountScreenViewModel: AccountScreenViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        accountScreenViewModel = AccountScreenViewModel(get(),AccountServiceImpl(get()))
+        accountScreenViewModel = AccountScreenViewModel(get(),AccountServiceImpl(get()), get())
 
         super.onCreate(savedInstanceState)
         setContent {

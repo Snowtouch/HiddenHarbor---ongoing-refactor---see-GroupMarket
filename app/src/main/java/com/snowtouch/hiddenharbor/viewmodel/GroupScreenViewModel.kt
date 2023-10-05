@@ -5,7 +5,8 @@ import com.snowtouch.hiddenharbor.data.model.User
 import kotlinx.coroutines.flow.StateFlow
 
 class GroupScreenViewModel(
-    private val userState: UserState,
+    userState: UserState,
 ) : ViewModel() {
     val user: StateFlow<User> = userState.user
+    val userLoggedIn: StateFlow<Boolean> = userState.userLoggedIn
 }

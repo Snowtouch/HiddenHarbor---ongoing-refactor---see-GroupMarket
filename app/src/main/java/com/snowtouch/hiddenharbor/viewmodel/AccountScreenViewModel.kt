@@ -6,17 +6,18 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.snowtouch.hiddenharbor.data.model.User
 import com.snowtouch.hiddenharbor.data.repository.AccountServiceImpl
-import com.snowtouch.hiddenharbor.data.repository.RealtimeDatabaseService
+import com.snowtouch.hiddenharbor.data.repository.RealtimeDatabaseServiceImpl
 import kotlinx.coroutines.flow.StateFlow
 
 class AccountScreenViewModel(
     private val userState: UserState,
     private val accountServiceImpl: AccountServiceImpl,
-    private val realtimeDatabaseService: RealtimeDatabaseService
+    private val realtimeDatabaseServiceImpl: RealtimeDatabaseServiceImpl
 ) : ViewModel() {
     var uiState = mutableStateOf(LoginUiState())
         private set
     val user: StateFlow<User> = userState.user
+    val userLoggedIn: StateFlow<Boolean> = userState.userLoggedIn
 
     private fun clearEmailAndPasswordFields(){
         uiState.value = uiState.value.copy(email = "", password = "")
@@ -35,32 +36,30 @@ class AccountScreenViewModel(
             Toast.makeText(context, "Enter valid credentials", Toast.LENGTH_LONG)
                 .show()
         } else {
-            accountServiceImpl.createAccount(email, password) { error ->
+            accountServiceImpl.createAccount(email, password) { uid, error ->
                 if (error!=null) {
-                    Toast.makeText(context, error.localizedMessage, Toast.LENGTH_LONG)
-                        .show()
-                }
-            }
-            realtimeDatabaseService.createUserData(userState.user.value) { error ->
-                if (error!=null) {
-                    Toast.makeText(context, error.localizedMessage, Toast.LENGTH_LONG)
-                        .show()
+                    toastMessage(context, error.localizedMessage)
+                } else if(uid!=null) {
+                    realtimeDatabaseServiceImpl.createUserData(uid, email) { exception ->
+                        toastMessage(context, exception?.localizedMessage)
+                    }
                 }
             }
         }
-
     }
-    fun signIn(email: String, password: String, context: Context) {
+    fun login(email: String, password: String, context: Context) {
         if (checkCredentials(email, password)) {
             Toast.makeText(context, "Enter valid credentials", Toast.LENGTH_LONG)
                 .show()
         } else {
             accountServiceImpl.authenticate(email, password) { error ->
                 if (error!=null) {
-                    Toast.makeText(context, error.localizedMessage, Toast.LENGTH_LONG)
-                       .show()
+                    toastMessage(context, error.localizedMessage)
                 } else {
                     userState.setUserLoggedIn(true)
+                    realtimeDatabaseServiceImpl.userDataListener(UserState) { exception ->
+                        toastMessage(context, exception.toString())
+                    }
                 }
             }
         }
@@ -68,10 +67,15 @@ class AccountScreenViewModel(
     fun signOut(){
         accountServiceImpl.signOut()
         userState.setUserLoggedIn(false)
+        realtimeDatabaseServiceImpl.removeUserValueEventListener(userState)
         clearEmailAndPasswordFields()
     }
 }
-
+private fun toastMessage(context: Context, message: String?) {
+    if (message?.isNotEmpty() == true) {
+        Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+    }
+}
 data class LoginUiState(
     val email: String = "",
     val password: String = ""

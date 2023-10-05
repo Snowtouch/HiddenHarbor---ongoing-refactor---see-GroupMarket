@@ -10,7 +10,14 @@ object UserState {
     private val _user = MutableStateFlow(User())
     val user: StateFlow<User> = _user.asStateFlow()
 
+    private val _userLoggedIn = MutableStateFlow(false)
+    val userLoggedIn: StateFlow<Boolean> = _userLoggedIn.asStateFlow()
+
     fun setUserLoggedIn(loggedIn: Boolean) {
-        _user.value = _user.value.copy(userLoggedIn = loggedIn)
+        _userLoggedIn.value = loggedIn
+    }
+
+    fun updateUserData(user: User?) {
+        _user.value = user ?: User()
     }
 }
