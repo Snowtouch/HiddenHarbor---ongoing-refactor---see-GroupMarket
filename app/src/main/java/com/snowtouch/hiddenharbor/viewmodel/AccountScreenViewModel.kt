@@ -19,18 +19,14 @@ class AccountScreenViewModel(
     val user: StateFlow<User> = userState.user
     val userLoggedIn: StateFlow<Boolean> = userState.userLoggedIn
 
-    private fun clearEmailAndPasswordFields(){
-        uiState.value = uiState.value.copy(email = "", password = "")
-    }
-    private fun checkCredentials(email: String?, password: String?) : Boolean {
-        return email == "" || password == ""
-    }
+
     fun onEmailChange(newValue: String) {
         uiState.value = uiState.value.copy(email = newValue)
     }
     fun onPasswordChange(newValue: String) {
         uiState.value = uiState.value.copy(password = newValue)
     }
+
     fun createAccount(email: String, password: String, context: Context) {
         if (checkCredentials(email, password)) {
             Toast.makeText(context, "Enter valid credentials", Toast.LENGTH_LONG)
@@ -57,19 +53,31 @@ class AccountScreenViewModel(
                     toastMessage(context, error.localizedMessage)
                 } else {
                     userState.setUserLoggedIn(true)
-                    realtimeDatabaseServiceImpl.userDataListener(UserState) { exception ->
-                        toastMessage(context, exception.toString())
-                    }
+                    toggleCurrentUserDataListener(context, true)
                 }
             }
         }
     }
-    fun signOut(){
+    fun signOut(context: Context){
         accountServiceImpl.signOut()
         userState.setUserLoggedIn(false)
-        realtimeDatabaseServiceImpl.removeUserValueEventListener(userState)
+        toggleCurrentUserDataListener(context, false)
         clearEmailAndPasswordFields()
     }
+    fun toggleCurrentUserDataListener(context: Context, enable: Boolean) {
+        if (enable) realtimeDatabaseServiceImpl.userDataListener(UserState) { exception ->
+            toastMessage(context, exception.toString())
+        } else {
+            realtimeDatabaseServiceImpl.removeUserValueEventListener(userState)
+        }
+    }
+    private fun clearEmailAndPasswordFields(){
+        uiState.value = uiState.value.copy(email = "", password = "")
+    }
+
+}
+private fun checkCredentials(email: String?, password: String?) : Boolean {
+    return email == "" || password == ""
 }
 private fun toastMessage(context: Context, message: String?) {
     if (message?.isNotEmpty() == true) {

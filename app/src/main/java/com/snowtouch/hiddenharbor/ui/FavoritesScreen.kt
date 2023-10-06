@@ -9,8 +9,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
-import com.snowtouch.hiddenharbor.data.model.Ad
-import com.snowtouch.hiddenharbor.sampledata.sampleCardList
 import com.snowtouch.hiddenharbor.ui.components.AdListComponent
 import com.snowtouch.hiddenharbor.ui.components.ApplicationBottomBar
 import com.snowtouch.hiddenharbor.ui.components.TopBar
@@ -20,7 +18,6 @@ import com.snowtouch.hiddenharbor.viewmodel.UserState
 
 @Composable
 fun FavoritesScreen(
-    adList: List<Ad>?,
     navController: NavHostController,
     viewModel: FavoritesScreenViewModel
 ) {
@@ -34,7 +31,7 @@ fun FavoritesScreen(
         bottomBar = { ApplicationBottomBar(navController = navController)},
     ) { paddingValues ->
         if (userLoggedIn) {
-            AdListComponent(adList = adList, modifier = Modifier.padding(paddingValues))
+            AdListComponent(adList = user.ads, modifier = Modifier.padding(paddingValues))
         } else {
             UserNotLoggedScreenContent(paddingValues = paddingValues, navController = navController)
         }
@@ -44,5 +41,5 @@ fun FavoritesScreen(
 @Composable
 fun FavoritesScreenPreview(){
     val navController = NavHostController(LocalContext.current)
-    FavoritesScreen(sampleCardList, navController, FavoritesScreenViewModel(UserState))
+    FavoritesScreen(navController, FavoritesScreenViewModel(UserState))
 }

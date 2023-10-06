@@ -63,7 +63,6 @@ fun AccountScreen(
     val user by viewModel.user.collectAsState()
     val userLoggedIn by viewModel.userLoggedIn.collectAsState()
     val scrollState = rememberScrollState()
-
     Scaffold(
         modifier = Modifier,
         bottomBar = { ApplicationBottomBar(navController) }
@@ -82,7 +81,7 @@ fun AccountScreen(
                     horizontalArrangement = Arrangement.End
                 ) {
                     ElevatedButton(
-                        onClick = { viewModel.signOut() },
+                        onClick = { viewModel.signOut(context) },
                         modifier = Modifier.size(width = 100.dp, height = 50.dp),
                         shape = MaterialTheme.shapes.small,
                         colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary)

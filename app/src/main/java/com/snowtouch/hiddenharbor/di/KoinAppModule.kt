@@ -33,10 +33,19 @@ val firebaseModule = module {
             FirebaseStorage.getInstance()
         }
     }
-    single { RealtimeDatabaseServiceImpl(get()) }
+    single {
+        RealtimeDatabaseServiceImpl(get())
+    }
     single { UserState }
-    viewModel { AccountScreenViewModel(get(), get(), get()) }
-    viewModel { FavoritesScreenViewModel(get())}
 
+
+}
+val viewModelModule = module {
+    viewModel {
+        AccountScreenViewModel(get(), get(), get(), get())
+    }
+    viewModel {
+        FavoritesScreenViewModel(get())
+    }
 }
 var isFirebaseLocal = false
