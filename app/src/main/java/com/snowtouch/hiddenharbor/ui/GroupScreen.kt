@@ -18,8 +18,8 @@ import com.snowtouch.hiddenharbor.viewmodel.UserState
 
 @Composable
 fun GroupScreen(
-    viewModel: GroupScreenViewModel,
-    navController: NavHostController
+    navController: NavHostController,
+    viewModel: GroupScreenViewModel
 ) {
     val user by viewModel.user.collectAsState()
     val userLoggedIn by viewModel.userLoggedIn.collectAsState()

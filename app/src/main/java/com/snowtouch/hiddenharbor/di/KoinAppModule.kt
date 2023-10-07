@@ -42,7 +42,7 @@ val firebaseModule = module {
 }
 val viewModelModule = module {
     viewModel {
-        AccountScreenViewModel(get(), get(), get(), get())
+        AccountScreenViewModel(get(), get(), get())
     }
     viewModel {
         FavoritesScreenViewModel(get())

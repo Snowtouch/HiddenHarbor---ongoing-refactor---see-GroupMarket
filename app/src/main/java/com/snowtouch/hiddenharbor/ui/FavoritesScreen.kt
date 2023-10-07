@@ -1,6 +1,5 @@
 package com.snowtouch.hiddenharbor.ui
 
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -9,7 +8,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
-import com.snowtouch.hiddenharbor.ui.components.AdListComponent
 import com.snowtouch.hiddenharbor.ui.components.ApplicationBottomBar
 import com.snowtouch.hiddenharbor.ui.components.TopBar
 import com.snowtouch.hiddenharbor.ui.components.UserNotLoggedScreenContent
@@ -31,7 +29,7 @@ fun FavoritesScreen(
         bottomBar = { ApplicationBottomBar(navController = navController)},
     ) { paddingValues ->
         if (userLoggedIn) {
-            AdListComponent(adList = user.ads, modifier = Modifier.padding(paddingValues))
+            //AdListComponent(adList = user.ads, modifier = Modifier.padding(paddingValues))
         } else {
             UserNotLoggedScreenContent(paddingValues = paddingValues, navController = navController)
         }

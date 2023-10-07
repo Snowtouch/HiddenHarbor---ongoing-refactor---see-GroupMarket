@@ -85,8 +85,25 @@ fun TopBar(
             }
         },
         actions = {
-            if (CurrentScreen.name == AppRoute.StartScreen.name)
-                GroupsButton(onClick = { navController.navigate(AppRoute.GroupScreen.name) })
+            when (CurrentScreen.name) {
+                AppRoute.StartScreen.name -> {
+                    GroupsButton(onClick = { navController.navigate(AppRoute.GroupScreen.name) })
+                }
+                /*AppRoute.NewAdScreen.name -> {
+                    ElevatedButton(
+                        modifier = Modifier.size(width = 100.dp, height = 40.dp),
+                        onClick = {  },
+                        shape = MaterialTheme.shapes.small,
+                        colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary)
+                    ) {
+                        Text(
+                            text = "Dismiss",
+                            color = MaterialTheme.colorScheme.onPrimary,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }*/
+            }
         }
     )
 }

@@ -23,7 +23,7 @@ class MainActivity : ComponentActivity() {
     private lateinit var realtimeDatabaseServiceImpl: RealtimeDatabaseServiceImpl
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        accountScreenViewModel = AccountScreenViewModel(get(), get(),AccountServiceImpl(get()), get())
+        accountScreenViewModel = AccountScreenViewModel(get(), AccountServiceImpl(get()), get())
         Log.d("Activity","onCreate")
 
         super.onCreate(savedInstanceState)

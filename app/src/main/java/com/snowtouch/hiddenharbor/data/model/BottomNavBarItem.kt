@@ -17,7 +17,7 @@ data class BottomBarItem(
 val bottomBarItems = listOf(
     BottomBarItem(Icons.Filled.Home, "Home", AppRoute.StartScreen.name),
     BottomBarItem(Icons.Filled.Favorite, "Favorites", AppRoute.FavoritesScreen.name),
-    BottomBarItem(Icons.Filled.AddCircle, "Add", ""),
+    BottomBarItem(Icons.Filled.AddCircle, "Add", AppRoute.NewAdScreen.name),
     BottomBarItem(Icons.Filled.Email, "Messages", ""),
     BottomBarItem(Icons.Filled.Person, "Account", AppRoute.AccountScreen.name)
 )
