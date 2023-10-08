@@ -12,36 +12,36 @@ import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.ui.graphics.vector.ImageVector
 
 val accountScreenCategories = listOf(
-    Category(
+    AccountScreenCategory(
         name = "Your ads",
-        options = listOf(
-            Option(name = "Current", icon = Icons.Default.ShoppingCart, route = "current_ads"),
-            Option(name = "Finished", icon = Icons.Default.Done, route = "finished_ads"),
-            Option(name = "Drafts", icon = Icons.Default.Build, route = "draft_ads")
+        accountCategoryOptions = listOf(
+            AccountCategoryOption(name = "Current", icon = Icons.Default.ShoppingCart, route = "current_ads"),
+            AccountCategoryOption(name = "Finished", icon = Icons.Default.Done, route = "finished_ads"),
+            AccountCategoryOption(name = "Drafts", icon = Icons.Default.Build, route = "draft_ads")
         )
     ),
-    Category(
+    AccountScreenCategory(
         name = "Messages",
-        options = listOf(
-            Option(name = "Current", icon = Icons.Default.Email, route = "current_messages"),
-            Option(name = "Deleted", icon = Icons.Default.Delete, route = "trash_messages")
+        accountCategoryOptions = listOf(
+            AccountCategoryOption(name = "Current", icon = Icons.Default.Email, route = "current_messages"),
+            AccountCategoryOption(name = "Deleted", icon = Icons.Default.Delete, route = "trash_messages")
         )
     ),
-    Category(
+    AccountScreenCategory(
         name = "Settings",
-        options = listOf(
-            Option(name = "Account data", icon = Icons.Default.Person, route = "account_data"),
-            Option(name = "Theme", icon = Icons.Default.Edit, route = "theme_options"),
-            Option(name = "About", icon = Icons.Default.Info, route = "about_app")
+        accountCategoryOptions = listOf(
+            AccountCategoryOption(name = "Account data", icon = Icons.Default.Person, route = "account_data"),
+            AccountCategoryOption(name = "Theme", icon = Icons.Default.Edit, route = "theme_options"),
+            AccountCategoryOption(name = "About", icon = Icons.Default.Info, route = "about_app")
         )
     )
 )
-data class Option(
+data class AccountCategoryOption(
     val name: String,
     val icon: ImageVector?,
     val route: String
 )
-data class Category(
+data class AccountScreenCategory(
     val name: String,
-    val options: List<Option>?
+    val accountCategoryOptions: List<AccountCategoryOption>?
 )

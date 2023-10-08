@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="category_home_and_garden">Home and garden</string>
+    <string name="category_electronics">Electronics</string>
+    <string name="category_fashion">Fashion</string>
+    <string name="category_automotive">Automotive</string>
+    <string name="category_real_estate">Real Estate</string>
+    <string name="category_pets">Pets</string>
+    <string name="category_miscellaneous">Miscellaneous</string>
+    <string name="subcategory_furniture">Furniture</string>
+    <string name="subcategory_home_appliances">Home Appliances</string>
+    <string name="subcategory_gardening_tools">Gardening Tools</string>
+    <string name="subcategory_decorations">Decorations</string>
+    <string name="subcategory_kitchenware">Kitchenware</string>
+    <string name="subcategory_smartphones_and_tvs">Smartphones and TVs</string>
+    <string name="subcategory_laptops_and_computers">Laptops and Computers</string>
+    <string name="subcategory_audio_and_photography_equipment">Audio and Photography Equipment</string>
+    <string name="subcategory_video_games">Video Games</string>
+    <string name="subcategory_electronic_accessories">Electronic Accessories</string>
+    <string name="subcategory_womens_clothing">Women\'s Clothing</string>
+    <string name="subcategory_mens_clothing">Men\'s Clothing</string>
+    <string name="subcategory_shoes">Shoes</string>
+    <string name="subcategory_jewelry">Jewelry</string>
+    <string name="subcategory_accessories">Accessories</string>
+    <string name="subcategory_passenger_cars">Passenger Cars</string>
+    <string name="subcategory_commercial_vehicles">Commercial Vehicles</string>
+    <string name="subcategory_motorcycles">Motorcycles</string>
+    <string name="subcategory_car_parts">Car Parts</string>
+    <string name="subcategory_motorcycle_accessories">Motorcycle Accessories</string>
+    <string name="subcategory_tools">Tools</string>
+    <string name="subcategory_apartments">Apartments</string>
+    <string name="subcategory_houses">Houses</string>
+    <string name="subcategory_land">Land</string>
+    <string name="subcategory_commercial_properties">Commercial Properties</string>
+    <string name="subcategory_dogs">Dogs</string>
+    <string name="subcategory_cats">Cats</string>
+    <string name="subcategory_livestock">Livestock</string>
+    <string name="subcategory_other_animals">Other animals</string>
+    <string name="subcategory_pet_accessories">Pet Accessories</string>
+    <string name="subcategory_antiques_and_collectibles">Antiques and Collectibles</string>
+    <string name="subcategory_sports_and_recreation">Sports and Recreation</string>
+    <string name="subcategory_books_and_magazines">Books and Magazines</string>
+    <string name="subcategory_music_and_instruments">Music and Instruments</string>
+    <string name="subcategory_health_and_beauty">Health and Beauty</string>
+</resources>

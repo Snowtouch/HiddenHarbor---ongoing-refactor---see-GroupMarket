@@ -4,19 +4,19 @@ import java.text.DecimalFormat
 
 
 data class Ad(
-    val adId: String = "",
     val userId: String? = null,
     val title: String = "",
     val description: String? = null,
     val price: Double? = null,
-    val category: String? = null,
+    val category: Int? = null,
+    val subcategory: Int? = null,
     val group: String? = null,
     val location: String? = null,
     val datePosted: String = "",
     val photoUrls: List<String>? = null,
     val isFavorite: Boolean = false,
-    val privacyLevel: AdPrivacyLevel? = null,
-    val adStatus: AdStatus? = null
+    val privacyLevel: AdPrivacyLevel = AdPrivacyLevel.PUBLIC,
+    val adStatus: AdStatus = AdStatus.DRAFT
 ) {
     fun getFormattedPrice(): String {
         val decimalFormat = DecimalFormat("#.##")

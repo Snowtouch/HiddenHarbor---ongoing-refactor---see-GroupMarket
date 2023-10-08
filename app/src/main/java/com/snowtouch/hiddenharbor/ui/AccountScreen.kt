@@ -46,15 +46,15 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.snowtouch.hiddenharbor.R
-import com.snowtouch.hiddenharbor.data.model.Category
-import com.snowtouch.hiddenharbor.data.model.Option
+import com.snowtouch.hiddenharbor.data.model.AccountCategoryOption
+import com.snowtouch.hiddenharbor.data.model.AccountScreenCategory
 import com.snowtouch.hiddenharbor.data.model.accountScreenCategories
 import com.snowtouch.hiddenharbor.ui.components.ApplicationBottomBar
 import com.snowtouch.hiddenharbor.viewmodel.AccountScreenViewModel
 
 @Composable
 fun AccountScreen(
-    categories: List<Category>,
+    categories: List<AccountScreenCategory>,
     navController: NavHostController,
     viewModel: AccountScreenViewModel,
 ) {
@@ -94,9 +94,9 @@ fun AccountScreen(
                     }
                 }
                 categories.forEach { category ->
-                    CategoryItem(category = category)
-                    category.options?.forEach { option ->
-                        OptionItem(option = option)
+                    CategoryItem(accountScreenCategory = category)
+                    category.accountCategoryOptions?.forEach { option ->
+                        OptionItem(accountCategoryOption = option)
                     }
                 }
             }
@@ -142,11 +142,11 @@ fun AccountScreen(
                         .padding(innerPadding)
                         .padding(24.dp)
                 ) {
-                    CategoryItem(category = categories.last())
-                    val filteredOptions = categories.last().options?.filterNot { option ->
+                    CategoryItem(accountScreenCategory = categories.last())
+                    val filteredOptions = categories.last().accountCategoryOptions?.filterNot { option ->
                         option.name == "Account data" }
                     filteredOptions?.forEach { option ->
-                        OptionItem(option = option)
+                        OptionItem(accountCategoryOption = option)
                     }
                 }
             }
@@ -225,13 +225,13 @@ fun LoginBox(
     }
 }
 @Composable
-fun CategoryItem(category: Category) {
+fun CategoryItem(accountScreenCategory: AccountScreenCategory) {
     Row(modifier = Modifier.padding(top = 12.dp)) {
-        Text(text = category.name, style = MaterialTheme.typography.headlineLarge)
+        Text(text = accountScreenCategory.name, style = MaterialTheme.typography.headlineLarge)
     }
 }
 @Composable
-fun OptionItem(option: Option) {
+fun OptionItem(accountCategoryOption: AccountCategoryOption) {
     Row(
         modifier = Modifier
             .padding(start = 12.dp)
@@ -239,9 +239,9 @@ fun OptionItem(option: Option) {
             .size(height = 48.dp, width = 300.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        if (option.icon != null) {Icon(imageVector = option.icon, contentDescription = null)}
+        if (accountCategoryOption.icon != null) {Icon(imageVector = accountCategoryOption.icon, contentDescription = null)}
         Spacer(modifier = Modifier.padding(6.dp))
-        Text(text = option.name, style = MaterialTheme.typography.titleMedium)
+        Text(text = accountCategoryOption.name, style = MaterialTheme.typography.titleMedium)
     }
     Divider()
 }

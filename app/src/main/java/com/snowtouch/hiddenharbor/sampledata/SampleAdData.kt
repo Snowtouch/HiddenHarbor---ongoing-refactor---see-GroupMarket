@@ -9,7 +9,6 @@ val photoList = listOf(
     "${R.drawable.sample_ad_image}"
 )
 val sampleAd: Ad = Ad(
-    adId = "435346",
     userId = "037662",
     title = "Spodnie",
     description = "ADFASDFAD sdfsdfsdg asfadfad adfadfadf asdfasfafa",
