@@ -1,18 +1,33 @@
 package com.snowtouch.hiddenharbor.ui
 
 import android.content.Context
+import android.net.Uri
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.Card
+import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.FilterChip
@@ -31,11 +46,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.snowtouch.hiddenharbor.data.model.Ad
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
+import com.snowtouch.hiddenharbor.R
 import com.snowtouch.hiddenharbor.data.model.adCategories
 import com.snowtouch.hiddenharbor.ui.components.TopBar
 import com.snowtouch.hiddenharbor.ui.components.UserNotLoggedScreenContent
@@ -51,11 +69,14 @@ fun NewAdScreen(
     val userLoggedIn by viewModel.userLoggedIn.collectAsState()
 
     val context = LocalContext.current
+    var groupButtonEnabled by remember { mutableStateOf(false)}
+    var expandedGroupMenu by remember { mutableStateOf(false) }
+    var selectedGroup by remember { mutableStateOf(String()) }
 
     Scaffold(
         modifier = Modifier,
         topBar = {
-            TopBar(caNavigateBack = true, navController = navController, searchFieldVisible = false) },
+            TopBar(title = "Add new ad", caNavigateBack = true, navController = navController, searchFieldVisible = false) },
 
     ) { innerPadding ->
         if (!userLoggedIn) { //TEST USER VARIABLE - TO REMOVE
@@ -67,49 +88,95 @@ fun NewAdScreen(
                     .verticalScroll(scrollState)
                     .sizeIn(maxWidth = 370.dp)
                     .fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
                 ) {
+
+                AdImagePicker(viewModel = viewModel)
+
                 AdTextField(
                     modifier = Modifier,
                     text = "Title",
-                    value = "",
-                    onValueChange = {})
+                    value = viewModel.adUiState.ad.title,
+                    onValueChange = { viewModel.updateAdUiState(viewModel.adUiState.ad.copy(title = it)) }
+                )
                 AdTextField(
                     modifier = Modifier
                         .sizeIn(minHeight = 200.dp),
                     text = "Description",
-                    value = "",
-                    onValueChange = {})
+                    value = viewModel.adUiState.ad.description,
+                    onValueChange = { viewModel.updateAdUiState(viewModel.adUiState.ad.copy(description = it)) }
+                )
+                CategoryMenu(
+                    label = "Select category",
+                    subcategory = false,
+                    context = context, viewModel =
+                    viewModel)
 
-                CategoryMenu(label = "Select category", subcategory = false, context = context, viewModel = viewModel)
-                if (viewModel.adUiState.ad.category != null) {
-                    CategoryMenu(label = "Select subcategory", subcategory = true, context = context, viewModel = viewModel)
+                AnimatedVisibility(
+                    visible = viewModel.adUiState.ad.category != null,
+                    enter = scaleIn(),
+                    exit = scaleOut()
+                ) {
+                    CategoryMenu(
+                        label = "Select subcategory",
+                        subcategory = true,
+                        context = context,
+                        viewModel = viewModel
+                    )
                 }
                 AdTextField(
                     modifier = Modifier, 
                     text = "Price", 
-                    value = "", 
-                    onValueChange = {})
-                Row(horizontalArrangement = Arrangement.SpaceEvenly) {
-                    var selected by remember { mutableStateOf(false) }
+                    value = viewModel.adUiState.ad.price.toString(),
+                    onValueChange = { viewModel.updateAdUiState(viewModel.adUiState.ad.copy(price = it.toDouble())) }
+                )
                     FilterChip(
-                        onClick = { selected = !selected },
+                        onClick = { groupButtonEnabled = !groupButtonEnabled },
                         label = {
-                            Text("Filter chip")
+                            Text("Group ad")
                         },
-                        selected = selected,
-                        leadingIcon = if (selected) {
-                            {
-                                Icon(
-                                    imageVector = Icons.Filled.Done,
-                                    contentDescription = "Done icon",
-                                    modifier = Modifier.size(FilterChipDefaults.IconSize)
-                                )
-                            }
+                        selected = groupButtonEnabled,
+                        leadingIcon = if (groupButtonEnabled)
+                        { {
+                            Icon(
+                                imageVector = Icons.Filled.Done,
+                                contentDescription = "Done icon",
+                                modifier = Modifier.size(FilterChipDefaults.IconSize)) }
                         } else {
                             null
                         },
                     )
+                AnimatedVisibility(
+                    visible = groupButtonEnabled,
+                    enter = scaleIn(),
+                    exit = scaleOut()
+                ) {
+                    ExposedDropdownMenuBox(
+                        expanded = expandedGroupMenu,
+                        onExpandedChange = { expandedGroupMenu = it }
+                    ) {
+                        TextField(
+                            value = selectedGroup,
+                            onValueChange = {},
+                            modifier = Modifier.fillMaxWidth(),
+                            readOnly = true,
+                            label = { Text(text = if (user.groups.isEmpty()) "No groups available"
+                            else "Select group") }
+                        )
+                        ExposedDropdownMenu(
+                            expanded = expandedGroupMenu,
+                            onDismissRequest = { expandedGroupMenu = false }
+                        ) {
+                            if (user.groups.isNotEmpty())
+                                user.groups.forEach{
+                                    DropdownMenuItem(
+                                        text = { Text(text = it!!) },
+                                        onClick = { selectedGroup = it!! }
+                                    )
+                                }
+                        }
+                    }
                 }
             }
         } else {
@@ -121,6 +188,71 @@ fun NewAdScreen(
     }
 }
 @Composable
+fun AdImagePicker(
+    viewModel: NewAdScreenViewModel
+) {
+    var selectedImageUris by remember { mutableStateOf<List<Uri>>(emptyList()) }
+    val multiplePhotoPicker = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickMultipleVisualMedia(maxItems = 6)
+    ) {
+        if (it != null) {
+            Log.d("PhotoPicker", "Selected URI: $it")
+            selectedImageUris = it
+        } else {
+            Log.d("PhotoPicker", "No media selected")
+        }
+    }
+
+    Card(modifier = Modifier
+        .fillMaxWidth()
+        .padding(bottom = 4.dp)
+    ) {
+        Box(modifier = Modifier
+            .fillMaxWidth()
+            .padding(12.dp)){
+            AsyncImage(
+                modifier = Modifier
+                    .clickable {
+                        multiplePhotoPicker.launch(
+                            PickVisualMediaRequest(
+                                ActivityResultContracts
+                                    .PickVisualMedia
+                                    .ImageOnly)) },
+                model = if (selectedImageUris.isNotEmpty()) {
+                    ImageRequest
+                        .Builder(LocalContext.current)
+                        .data(selectedImageUris[0])
+                        .build()
+                } else {
+                    ImageRequest
+                        .Builder(LocalContext.current)
+                        .data(R.drawable.no_image)
+                        .build()
+                },
+                contentDescription = "Ad main image")
+        }
+        if (selectedImageUris.isNotEmpty())
+            Divider()
+            LazyRow(
+                modifier = Modifier.height(100.dp),
+                contentPadding = PaddingValues(4.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                items(selectedImageUris) {
+                    AsyncImage(
+                        model = ImageRequest
+                            .Builder(LocalContext.current)
+                            .data(it)
+                            .build(),
+                        contentDescription = null,
+                        modifier = Modifier,
+                        contentScale = ContentScale.Fit)
+                    Spacer(modifier = Modifier.padding(2.dp))
+                }
+            }
+    }
+}
+@Composable
 fun CategoryMenu(
     label: String,
     subcategory: Boolean,
@@ -128,9 +260,7 @@ fun CategoryMenu(
     viewModel: NewAdScreenViewModel
 ) {
     val adUiState = viewModel.adUiState
-
     var expanded by remember { mutableStateOf(false) }
-
     val selectedCategoryName = if (!subcategory) {
         adCategories.getOrNull(adUiState.ad.category ?: 0)?.categoryName?.let {
             context.resources.getString(it)
@@ -165,7 +295,8 @@ fun CategoryMenu(
                     DropdownMenuItem(
                         text = { Text(context.resources.getString(category.categoryName)) },
                         onClick = {
-                            viewModel.updateAdUiState(updatedAd = Ad(category = index))
+                            viewModel.updateAdUiState(
+                                viewModel.adUiState.ad.copy(category = index, subcategory = null))
                             expanded = false
                         },
                     )
@@ -197,7 +328,7 @@ fun AdTextField(
     value: String,
     onValueChange: (String) -> Unit
 ) {
-    Card(modifier.padding(bottom = 6.dp)){
+    Card(modifier.padding(bottom = 4.dp)){
         Text(
             text = text,
             modifier = Modifier.padding(start = 12.dp, bottom = 4.dp),

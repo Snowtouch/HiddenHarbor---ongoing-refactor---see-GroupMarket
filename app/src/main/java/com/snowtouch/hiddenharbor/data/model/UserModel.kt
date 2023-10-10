@@ -5,5 +5,6 @@ data class User(
     val email: String = "",
     val ads: List<String?> = emptyList(),
     val favorites: List<String?> = emptyList(),
+    val groups: List<String?> = emptyList(),
     val conversations: List<Conversation> = emptyList()
 )

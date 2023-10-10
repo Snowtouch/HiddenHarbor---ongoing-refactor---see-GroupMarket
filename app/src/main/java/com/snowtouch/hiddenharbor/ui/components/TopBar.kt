@@ -1,5 +1,6 @@
 package com.snowtouch.hiddenharbor.ui.components
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
@@ -16,7 +18,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,10 +45,8 @@ fun TopBar(
         unfocusedIndicatorColor = Color.Transparent,
         cursorColor = Color.Black
     )
-    TopAppBar(
-        modifier = Modifier
-            .padding(12.dp)
-            .clip(MaterialTheme.shapes.small),
+    CenterAlignedTopAppBar(
+        modifier = Modifier.padding(top = 8.dp),
         navigationIcon = {
             if (caNavigateBack)
                 IconButton(
@@ -119,8 +118,10 @@ fun GroupsButton(
             containerColor = MaterialTheme.colorScheme.primary,
             contentColor = MaterialTheme.colorScheme.onPrimary),
         modifier = modifier
+            .border(1.dp, MaterialTheme.colorScheme.primary, MaterialTheme.shapes.small)
+            .size(width = 47.dp, height = 47.dp)
             .clip(shape = MaterialTheme.shapes.small)
-            .size(width = 50.dp, height = 50.dp),
+
 
     ) {
         Column(
@@ -139,5 +140,5 @@ fun GroupsButton(
 @Composable
 fun MainTopBarPreview(){
     val navController = NavHostController(LocalContext.current)
-    TopBar(navController = navController, searchFieldVisible = false)
+    TopBar(navController = navController, searchFieldVisible = true, )
 }
