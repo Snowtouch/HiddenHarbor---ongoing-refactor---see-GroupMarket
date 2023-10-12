@@ -79,7 +79,11 @@ fun TopBar(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    Text(text = title.orEmpty(), style = MaterialTheme.typography.headlineLarge)
+                    Text(
+                        text = title.orEmpty(),
+                        modifier = Modifier,
+                        style = MaterialTheme.typography.headlineSmall,
+                        fontWeight = FontWeight.Bold)
                 }
             }
         },

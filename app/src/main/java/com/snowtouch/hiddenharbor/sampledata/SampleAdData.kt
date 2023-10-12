@@ -17,7 +17,6 @@ val sampleAd: Ad = Ad(
     groupId = null,
     location = null,
     datePosted = "7-11-2023",
-    photoUrls = photoList,
     privacyLevel = AdPrivacyLevel.PUBLIC,
     adStatus = AdStatus.ACTIVE
 )

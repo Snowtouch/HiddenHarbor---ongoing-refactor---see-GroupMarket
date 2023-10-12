@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.IconButton
@@ -18,10 +17,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ElevatedButton
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -43,14 +40,17 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.ui.window.Popup
+import androidx.compose.ui.window.PopupProperties
 import androidx.navigation.NavHostController
 import com.snowtouch.hiddenharbor.R
 import com.snowtouch.hiddenharbor.data.model.AccountCategoryOption
 import com.snowtouch.hiddenharbor.data.model.AccountScreenCategory
 import com.snowtouch.hiddenharbor.data.model.accountScreenCategories
 import com.snowtouch.hiddenharbor.ui.components.ApplicationBottomBar
+import com.snowtouch.hiddenharbor.ui.components.CustomElevatedCard
 import com.snowtouch.hiddenharbor.viewmodel.AccountScreenViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun AccountScreen(
@@ -112,31 +112,18 @@ fun AccountScreen(
                     uiState.password,
                     viewModel::onPasswordChange
                 )
-                ElevatedButton(
-                    modifier = Modifier.size(width = 175.dp, height = 50.dp),
+                AccountScreenButton(
                     onClick = { viewModel.login(uiState.email, uiState.password, context) },
-                    shape = MaterialTheme.shapes.small,
-                    colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary)
-                ) {
-                    Text(
-                        text = "Login",
-                        color = MaterialTheme.colorScheme.onPrimary,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-                Spacer(modifier = Modifier.padding(top = 8.dp))
-                ElevatedButton(
-                    modifier = Modifier.size(width = 175.dp, height = 50.dp),
+                    text = "Login"
+                )
+                Text(
+                    text = "Don't have account ?",
+                    modifier = Modifier.padding(top = 24.dp),
+                    fontWeight = FontWeight.Medium)
+                AccountScreenButton(
                     onClick = { viewModel.createAccount(uiState.email, uiState.password, context) },
-                    shape = MaterialTheme.shapes.small,
-                    colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary)
-                ) {
-                    Text(
-                        text = "Sign up",
-                        color = MaterialTheme.colorScheme.onPrimary,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
+                    text = "Create"
+                )
                 Column(
                     modifier = Modifier
                         .padding(innerPadding)
@@ -154,6 +141,39 @@ fun AccountScreen(
     }
 }
 @Composable
+private fun CreateAccountPopUp() {
+    Popup(
+        alignment = Alignment.Center,
+        properties = PopupProperties(
+            focusable = true,
+            dismissOnBackPress = true,
+            dismissOnClickOutside = false
+        )
+    ) {
+
+    }
+}
+@Composable
+private fun AccountScreenButton(
+    onClick: () -> Unit,
+    text: String
+){
+    ElevatedButton(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 25.dp),
+        onClick = onClick,
+        shape = MaterialTheme.shapes.extraSmall,
+        colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary)
+    ) {
+        Text(
+            text = text,
+            color = MaterialTheme.colorScheme.onPrimary,
+            fontWeight = FontWeight.Bold
+        )
+    }
+}
+@Composable
 fun LoginBox(
     valueEmail: String,
     onNewValueEmail: (String) -> Unit,
@@ -165,15 +185,11 @@ fun LoginBox(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(top = 16.dp, bottom = 16.dp),
+            .padding(top = 16.dp, bottom = 8.dp),
         verticalArrangement = Arrangement.SpaceEvenly,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        ElevatedCard(
-            modifier = Modifier,
-            shape = RoundedCornerShape(12.dp),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
-        ) {
+        CustomElevatedCard {
             Column(modifier.padding(24.dp)) {
                 OutlinedTextField(
                     value = valueEmail,
@@ -248,9 +264,23 @@ fun OptionItem(accountCategoryOption: AccountCategoryOption) {
 @Preview
 @Composable
 fun AccountScreenPreview() {
-    val accountScreenViewModel: AccountScreenViewModel = viewModel()
+    val accountScreenViewModel: AccountScreenViewModel = koinViewModel()
     AccountScreen( accountScreenCategories,
         navController = NavHostController(LocalContext.current),
         viewModel = accountScreenViewModel
     )
 }
+/*@Composable
+@Preview
+fun App() {
+    KoinApplication(application = {
+        androidContext(LocalContext.current)
+        modules(viewModelModule, snackbarHostModule)
+    }) {
+        val accountScreenViewModel:AccountScreenViewModel by inject(AccountScreenViewModel::class.java)
+        AccountScreen(
+            categories = accountScreenCategories,
+            navController = NavHostController(LocalContext.current),
+            viewModel = accountScreenViewModel)// Compose to preview with Koin
+    }
+}*/

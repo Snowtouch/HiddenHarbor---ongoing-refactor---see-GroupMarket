@@ -1,5 +1,6 @@
 package com.snowtouch.hiddenharbor.data.model
 
+import android.net.Uri
 import java.text.DecimalFormat
 
 
@@ -13,7 +14,7 @@ data class Ad(
     val groupId: String? = null,
     val location: String? = null,
     val datePosted: String = "",
-    val photoUrls: List<String>? = null,
+    val photoUrls: List<Uri>? = null,
     val isFavorite: Boolean = false,
     val privacyLevel: AdPrivacyLevel = AdPrivacyLevel.PUBLIC,
     val adStatus: AdStatus = AdStatus.DRAFT

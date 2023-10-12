@@ -14,13 +14,18 @@ import com.google.firebase.database.FirebaseDatabase
 import com.snowtouch.hiddenharbor.data.repository.AccountServiceImpl
 import com.snowtouch.hiddenharbor.data.repository.RealtimeDatabaseServiceImpl
 import com.snowtouch.hiddenharbor.ui.components.NavigationComponent
+import com.snowtouch.hiddenharbor.ui.components.SnackbarGlobalDelegate
 import com.snowtouch.hiddenharbor.ui.theme.HiddenHarborTheme
 import com.snowtouch.hiddenharbor.viewmodel.AccountScreenViewModel
 import com.snowtouch.hiddenharbor.viewmodel.UserState
 import org.koin.android.ext.android.get
+import org.koin.android.ext.android.inject
+import org.koin.androidx.compose.KoinAndroidContext
+
 class MainActivity : ComponentActivity() {
     private lateinit var accountScreenViewModel: AccountScreenViewModel
     private lateinit var realtimeDatabaseServiceImpl: RealtimeDatabaseServiceImpl
+    private val snackbarGlobalDelegate: SnackbarGlobalDelegate by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         accountScreenViewModel = AccountScreenViewModel(get(), AccountServiceImpl(get()), get())
@@ -29,12 +34,17 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             HiddenHarborTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    val navController = rememberNavController()
-                    NavigationComponent(navController = navController, accountScreenViewModel = accountScreenViewModel)
+                KoinAndroidContext {
+                    Surface(
+                        modifier = Modifier.fillMaxSize(),
+                        color = MaterialTheme.colorScheme.background
+                    ) {
+                        val navController = rememberNavController()
+                        NavigationComponent(
+                            navController = navController,
+                            accountScreenViewModel = accountScreenViewModel
+                        )
+                    }
                 }
             }
         }
