@@ -125,8 +125,6 @@ fun GroupsButton(
             .border(1.dp, MaterialTheme.colorScheme.primary, MaterialTheme.shapes.small)
             .size(width = 47.dp, height = 47.dp)
             .clip(shape = MaterialTheme.shapes.small)
-
-
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,

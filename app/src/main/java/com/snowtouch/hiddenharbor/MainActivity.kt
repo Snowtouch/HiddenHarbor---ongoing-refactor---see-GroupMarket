@@ -68,13 +68,13 @@ class MainActivity : ComponentActivity() {
     override fun onResume() {
         super.onResume()
         Log.d("Activity","onResume")
-        accountScreenViewModel.toggleCurrentUserDataListener(baseContext, true)
+        accountScreenViewModel.toggleCurrentUserDataListener(true, snackbarGlobalDelegate)
     }
 
     override fun onStop() {
         super.onStop()
         Log.d("Activity","onStop")
-        accountScreenViewModel.toggleCurrentUserDataListener(baseContext, false)
+        accountScreenViewModel.toggleCurrentUserDataListener(false, snackbarGlobalDelegate)
     }
 
     override fun onDestroy() {

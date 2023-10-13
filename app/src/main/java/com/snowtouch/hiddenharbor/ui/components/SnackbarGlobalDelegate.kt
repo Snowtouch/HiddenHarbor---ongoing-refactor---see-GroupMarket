@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 enum class SnackbarState {
     DEFAULT, ERROR
 }
-internal class SnackbarGlobalDelegate(
+class SnackbarGlobalDelegate(
     var snackbarHostState: SnackbarHostState,
     var coroutineScope: CoroutineScope
 ) {
@@ -33,7 +33,7 @@ internal class SnackbarGlobalDelegate(
     ) {
         this.snackbarState = state
         coroutineScope.launch {
-            snackbarHostState.showSnackbar(message, actionLabel,withDismissAction, duration)
+            snackbarHostState.showSnackbar(message, actionLabel, withDismissAction, duration)
         }
     }
 }

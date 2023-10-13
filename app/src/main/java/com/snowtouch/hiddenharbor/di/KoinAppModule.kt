@@ -24,6 +24,7 @@ val firebaseModule = module {
             FirebaseDatabase.getInstance("https://xxxx-default-rtdb.europe-west1.firebasedatabase.app")
         }
     }
+
     single {
         val auth = FirebaseAuth.getInstance()
         if (isFirebaseLocal) {
@@ -31,6 +32,7 @@ val firebaseModule = module {
         }
         auth
     }
+
     single {
         if (isFirebaseLocal) {
             FirebaseStorage.getInstance("http://10.0.2.2:9199?ns=xxxx")
@@ -39,24 +41,19 @@ val firebaseModule = module {
         }
     }
 
-    single {
-        RealtimeDatabaseServiceImpl(get())
-    }
+    single { RealtimeDatabaseServiceImpl(get()) }
+
     single { UserState }
-
-
 }
 val viewModelModule = module {
-    viewModel {
-        AccountScreenViewModel(get(), get(), get())
-    }
-    viewModel {
-        FavoritesScreenViewModel(get())
-    }
+    viewModel { AccountScreenViewModel(get(), get(), get()) }
+    viewModel { FavoritesScreenViewModel(get()) }
 }
+
 val snackbarHostModule = module {
     single { SnackbarHostState() }
     single { CoroutineScope(SupervisorJob() + Dispatchers.Main) }
     single { SnackbarGlobalDelegate(get(), get()) }
 }
+
 var isFirebaseLocal = true
