@@ -33,7 +33,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -48,14 +47,12 @@ import androidx.navigation.NavHostController
 import com.snowtouch.hiddenharbor.R
 import com.snowtouch.hiddenharbor.data.model.AccountCategoryOption
 import com.snowtouch.hiddenharbor.data.model.AccountScreenCategory
-import com.snowtouch.hiddenharbor.data.model.accountScreenCategories
 import com.snowtouch.hiddenharbor.ui.components.ApplicationBottomBar
 import com.snowtouch.hiddenharbor.ui.components.CustomElevatedCard
 import com.snowtouch.hiddenharbor.ui.components.SnackbarGlobalDelegate
 import com.snowtouch.hiddenharbor.viewmodel.AccountActions
 import com.snowtouch.hiddenharbor.viewmodel.AccountScreenViewModel
 import com.snowtouch.hiddenharbor.viewmodel.LoginUiState
-import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
 
 @Composable
@@ -163,15 +160,15 @@ fun AccountScreenContent(
                 )
                 if (showCreateAccountPopup.value)
                     CreateAccountPopUp(
-                        valueEmail = uiState.emailNewAccount,
-                        onNewValueEmail = {
-                                newValue -> accountActions.onEmailChange(newValue, true) },
-                        valuePassword = uiState.passwordNewAccount,
-                        onNewValuePassword = {
-                                newValue -> accountActions.onPasswordChange(newValue, true) },
-                        valueConfirmPassword = uiState.passwordCheck,
+                        uiState = uiState,
+                        onNewValueEmail = { newValue ->
+                            accountActions.onEmailChange(newValue, true) },
+                        onNewValuePassword = { newValue ->
+                            accountActions.onPasswordChange(newValue, true) },
                         onNewValueConfirmPassword = { accountActions.onPasswordCheckChange(it) },
-                        onDismissRequest = { showCreateAccountPopup.value = false }
+                        onDismissRequest = { showCreateAccountPopup.value = false },
+                        onCreateAccountClick = { email, password ->
+                            accountActions.createAccount(email, password, snackbarGlobalDelegate)}
                 )
                 Column(
                     modifier = Modifier
@@ -191,16 +188,15 @@ fun AccountScreenContent(
 }
 @Composable
 private fun CreateAccountPopUp(
-    valueEmail: String,
+    uiState: LoginUiState,
     onNewValueEmail: (String) -> Unit,
-    valuePassword: String,
     onNewValuePassword: (String) -> Unit,
-    valueConfirmPassword: String,
     onNewValueConfirmPassword: (String) -> Unit,
+    onCreateAccountClick: (String, String) -> Unit,
     onDismissRequest: () -> Unit
 ) {
     Dialog(
-        onDismissRequest = { onDismissRequest() },
+        onDismissRequest = { },
         properties = DialogProperties(
             dismissOnBackPress = true,
             dismissOnClickOutside = false
@@ -212,24 +208,32 @@ private fun CreateAccountPopUp(
                     .padding(24.dp)
                     .fillMaxWidth()
             ) {
-                EmailTextField(valueEmail, onNewValueEmail)
-                Spacer(modifier = Modifier.padding(8.dp))
-                PasswordTextField(
-                    "Password", valuePassword, onNewValuePassword)
-                Spacer(modifier = Modifier.padding(8.dp))
-                PasswordTextField(
-                    "Repeat password", valueConfirmPassword, onNewValueConfirmPassword)
+                EmailTextField(uiState.emailNewAccount, onNewValueEmail)
+                PasswordTextField("Password", uiState.passwordNewAccount,
+                    onNewValuePassword, modifier = Modifier.padding(top = 6.dp))
+                PasswordTextField("Repeat password", uiState.passwordCheck,
+                    onNewValueConfirmPassword, modifier = Modifier.padding(top = 6.dp))
+                AccountScreenButton(
+                    modifier = Modifier.padding(top = 16.dp),
+                    /*TODO*/
+                    onClick = { onCreateAccountClick(uiState.emailNewAccount, uiState.passwordNewAccount) },
+                    text = "Create account")
+                AccountScreenButton(
+                    modifier = Modifier.padding(top = 16.dp),
+                    onClick =  onDismissRequest,
+                    text = "Cancel")
             }
         }
     }
 }
 @Composable
 private fun AccountScreenButton(
+    modifier: Modifier = Modifier,
     onClick: () -> Unit,
     text: String
 ){
     ElevatedButton(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 25.dp),
         onClick = onClick,
@@ -271,8 +275,10 @@ fun LoginBox(
 fun EmailTextField(
     valueEmail: String,
     onNewValueEmail: (String) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     OutlinedTextField(
+        modifier = modifier,
         value = valueEmail,
         onValueChange = { onNewValueEmail(it)},
         label = { Text(text = "E-mail") },
@@ -294,11 +300,13 @@ fun EmailTextField(
 fun PasswordTextField(
     label: String,
     valuePassword: String,
-    onNewValuePassword: (String) -> Unit
+    onNewValuePassword: (String) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val showPassword = remember { mutableStateOf(false) }
 
     OutlinedTextField(
+        modifier = modifier,
         value = valuePassword,
         onValueChange = { onNewValuePassword(it) },
         label = { Text(text = label) },
@@ -354,14 +362,15 @@ fun AccountCardPreview() {
 }
 @Preview
 @Composable
-fun AccountScreenContentPreview() {
-    val viewModel: AccountScreenViewModel = koinViewModel()
-    val context = LocalContext.current
-    val snackbarGlobalDelegate = koinInject<SnackbarGlobalDelegate>()
-    AccountScreenContent(accountScreenCategories,
-        NavHostController(context),
-        snackbarGlobalDelegate,
-        viewModel.uiState.value,
-        true
-        ,AccountActions(viewModel))
+fun CreateAccountDialogPreview(){
+    CreateAccountPopUp(
+        uiState = LoginUiState(),
+        onNewValueEmail = {},
+        onNewValuePassword = {},
+        onNewValueConfirmPassword = {},
+        onCreateAccountClick = { _, _ ->
+            run { }
+        },
+        onDismissRequest = {}
+)
 }

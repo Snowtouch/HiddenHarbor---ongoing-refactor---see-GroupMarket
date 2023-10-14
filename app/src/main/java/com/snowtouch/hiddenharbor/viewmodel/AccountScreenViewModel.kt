@@ -88,8 +88,9 @@ class AccountScreenViewModel(
             realtimeDatabaseServiceImpl.removeUserValueEventListener(userState)
         }
     }
-    private fun clearEmailAndPasswordFields(){
-        uiState.value = uiState.value.copy(emailLogin = "", passwordLogin = "")
+    private fun clearEmailAndPasswordFields() {
+        uiState.value = uiState.value.copy(emailLogin = "", passwordLogin = "",
+            emailNewAccount = "", passwordNewAccount = "", passwordCheck = "")
     }
 
 }
