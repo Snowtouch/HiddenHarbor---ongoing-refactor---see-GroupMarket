@@ -14,7 +14,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
-//VARIABLE TO KEEP PERSONAL DATA HIDDEN
 
 val firebaseModule = module {
 
