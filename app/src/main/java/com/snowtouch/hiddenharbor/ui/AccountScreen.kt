@@ -84,7 +84,7 @@ fun AccountScreenContent(
 ) {
 
     val scrollState = rememberScrollState()
-    var showCreateAccountPopup = remember { mutableStateOf(false) }
+    val showCreateAccountPopup = remember { mutableStateOf(false) }
 
     Scaffold(
         modifier = Modifier,
@@ -167,8 +167,8 @@ fun AccountScreenContent(
                             accountActions.onPasswordChange(newValue, true) },
                         onNewValueConfirmPassword = { accountActions.onPasswordCheckChange(it) },
                         onDismissRequest = { showCreateAccountPopup.value = false },
-                        onCreateAccountClick = { email, password ->
-                            accountActions.createAccount(email, password, snackbarGlobalDelegate)}
+                        onCreateAccountClick = { email, password, passwordCheck ->
+                            accountActions.createAccount(email, password, passwordCheck, snackbarGlobalDelegate)}
                 )
                 Column(
                     modifier = Modifier
@@ -192,7 +192,7 @@ private fun CreateAccountPopUp(
     onNewValueEmail: (String) -> Unit,
     onNewValuePassword: (String) -> Unit,
     onNewValueConfirmPassword: (String) -> Unit,
-    onCreateAccountClick: (String, String) -> Unit,
+    onCreateAccountClick: (String, String, String) -> Unit,
     onDismissRequest: () -> Unit
 ) {
     Dialog(
@@ -208,15 +208,17 @@ private fun CreateAccountPopUp(
                     .padding(24.dp)
                     .fillMaxWidth()
             ) {
+
                 EmailTextField(uiState.emailNewAccount, onNewValueEmail)
                 PasswordTextField("Password", uiState.passwordNewAccount,
                     onNewValuePassword, modifier = Modifier.padding(top = 6.dp))
                 PasswordTextField("Repeat password", uiState.passwordCheck,
                     onNewValueConfirmPassword, modifier = Modifier.padding(top = 6.dp))
+
                 AccountScreenButton(
                     modifier = Modifier.padding(top = 16.dp),
-                    /*TODO*/
-                    onClick = { onCreateAccountClick(uiState.emailNewAccount, uiState.passwordNewAccount) },
+                    onClick = { onCreateAccountClick(
+                        uiState.emailNewAccount, uiState.passwordNewAccount, uiState.passwordCheck) },
                     text = "Create account")
                 AccountScreenButton(
                     modifier = Modifier.padding(top = 16.dp),
@@ -368,7 +370,7 @@ fun CreateAccountDialogPreview(){
         onNewValueEmail = {},
         onNewValuePassword = {},
         onNewValueConfirmPassword = {},
-        onCreateAccountClick = { _, _ ->
+        onCreateAccountClick = { _, _, _ ->
             run { }
         },
         onDismissRequest = {}

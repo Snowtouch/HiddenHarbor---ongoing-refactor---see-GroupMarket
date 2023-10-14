@@ -2,6 +2,7 @@ package com.snowtouch.hiddenharbor.data.model
 
 import android.net.Uri
 import java.text.DecimalFormat
+import java.util.Locale
 
 
 data class Ad(
@@ -20,7 +21,9 @@ data class Ad(
     val adStatus: AdStatus = AdStatus.DRAFT
 ) {
     fun getFormattedPrice(): String {
-        val decimalFormat = DecimalFormat("#.##")
+        val decimalFormat = DecimalFormat.getNumberInstance(Locale.getDefault())
+        if (price.isNaN() || price == 0.0)
+            return ""
         return decimalFormat.format(price)
     }
 }

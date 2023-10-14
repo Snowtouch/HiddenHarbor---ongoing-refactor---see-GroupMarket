@@ -28,6 +28,7 @@ import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
@@ -56,6 +57,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -152,9 +154,10 @@ fun NewAdScreen(
                 }
                 AdTextField(
                     modifier = Modifier,
-                    text = "Price",
+                    text = "Price", /*TODO- crash on comma*/
                     value = Ad(price = viewModel.adUiState.ad.price).getFormattedPrice(),
-                    onValueChange = { viewModel.updateAdUiState(viewModel.adUiState.ad.copy(price = it.toDouble())) }
+                    onValueChange = { viewModel.updateAdUiState(viewModel.adUiState.ad.copy(price = it.toDouble())) },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                 )
                     FilterChip(
                         onClick = { groupButtonEnabled = !groupButtonEnabled
@@ -251,7 +254,7 @@ fun AdImagePicker(
             .fillMaxWidth()
             .padding(12.dp)){
             AsyncImage(
-                modifier = Modifier
+                modifier = Modifier.fillMaxWidth()
                     .clip(MaterialTheme.shapes.small)
                     .clickable {
                         multiplePhotoPicker.launch(
@@ -273,7 +276,9 @@ fun AdImagePicker(
                         .data(R.drawable.no_image)
                         .build()
                 },
-                contentDescription = "Ad main image")
+                contentDescription = "Ad main image",
+                alignment = Alignment.Center
+            )
         }
         AnimatedVisibility(
             visible = selectedImageUris.isNotEmpty(),
@@ -377,7 +382,8 @@ fun AdTextField(
     modifier: Modifier,
     text: String,
     value: String,
-    onValueChange: (String) -> Unit
+    onValueChange: (String) -> Unit,
+    keyboardOptions: KeyboardOptions = KeyboardOptions()
 ) {
     CustomElevatedCard(modifier.padding(top = 4.dp, bottom = 4.dp)) {
         Text(
@@ -392,7 +398,8 @@ fun AdTextField(
                 .fillMaxWidth()
                 .padding(start = 12.dp, end = 12.dp, bottom = 12.dp),
             textStyle = MaterialTheme.typography.bodyMedium,
-            colors = TextFieldDefaults.textFieldColors(containerColor = MaterialTheme.colorScheme.background)
+            colors = TextFieldDefaults.textFieldColors(containerColor = MaterialTheme.colorScheme.background),
+            keyboardOptions = keyboardOptions
         )
     }
 }
