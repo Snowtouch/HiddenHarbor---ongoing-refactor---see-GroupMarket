@@ -16,5 +16,4 @@
 google-services.json
 local.properties
 app/src/main/res/values/firebase_data.xml
-app/src/main/java/com/snowtouch/hiddenharbor/di/KoinAppModule.kt
 replacement.txt
