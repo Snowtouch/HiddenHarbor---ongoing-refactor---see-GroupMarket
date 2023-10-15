@@ -1,9 +1,11 @@
 package com.snowtouch.hiddenharbor.di
 
+import android.app.Application
 import androidx.compose.material3.SnackbarHostState
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
+import com.snowtouch.hiddenharbor.R
 import com.snowtouch.hiddenharbor.data.repository.RealtimeDatabaseServiceImpl
 import com.snowtouch.hiddenharbor.ui.components.SnackbarGlobalDelegate
 import com.snowtouch.hiddenharbor.viewmodel.AccountScreenViewModel
@@ -14,14 +16,19 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
+//VARIABLE TO KEEP PERSONAL DATA HIDDEN
+
+
 
 val firebaseModule = module {
 
     single {
+        val firebaseDatabaseLocalAddress = get<Application>().getString(R.string.firebaseDatabaseLocal)
+        val firebaseDatabaseRemoteAddress = get<Application>().getString(R.string.firebaseDatabaseRemote)
         if (isFirebaseLocal) {
-            FirebaseDatabase.getInstance("http://10.0.2.2:9299?ns=xxxx")
+            FirebaseDatabase.getInstance(firebaseDatabaseLocalAddress)
         } else {
-            FirebaseDatabase.getInstance("https://xxxx-default-rtdb.europe-west1.firebasedatabase.app")
+            FirebaseDatabase.getInstance(firebaseDatabaseRemoteAddress)
         }
     }
 
@@ -34,8 +41,9 @@ val firebaseModule = module {
     }
 
     single {
+        val firebaseStorageLocalAddress = get<Application>().getString(R.string.firebaseStorageLocal)
         if (isFirebaseLocal) {
-            FirebaseStorage.getInstance("http://10.0.2.2:9199?ns=xxxx")
+            FirebaseStorage.getInstance(firebaseStorageLocalAddress)
         } else {
             FirebaseStorage.getInstance()
         }
