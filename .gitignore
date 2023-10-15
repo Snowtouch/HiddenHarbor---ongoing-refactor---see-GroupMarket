@@ -13,7 +13,7 @@
 /captures
 .externalNativeBuild
 .cxx
-google-services.json
+app/google-services.json
 local.properties
 app/src/main/res/values/firebase_data.xml
 replacement.txt
