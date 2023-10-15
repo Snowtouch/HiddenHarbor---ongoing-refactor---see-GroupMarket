@@ -14,6 +14,8 @@ class NewAdScreenViewModel(private val userState: UserState) : ViewModel() {
 
     var adUiState by mutableStateOf(AdUiState())
 
+
+
     fun updateAdUiState(updatedAd: Ad)
     {
         adUiState = adUiState.copy(ad = updatedAd)

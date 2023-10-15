@@ -39,7 +39,8 @@ class AccountScreenViewModel(
                 if (exception!=null) {
                     handleExceptions(exception, snackbarDelegate)
                 } else if(uid!=null) {
-                    createUserDataOnAccountCreation(uid, email, snackbarDelegate)
+                    userState.updateUserData(user.value.copy(uniqueId = uid, email = email))
+                    createUserDataOnAccountCreation(userState, snackbarDelegate)
                     handleSuccessfulEvents("Account created", snackbarDelegate)
                 }
             }
@@ -77,11 +78,10 @@ class AccountScreenViewModel(
         }
     }
     private fun createUserDataOnAccountCreation(
-        uid: String,
-        email: String,
+        userState: UserState,
         snackbarDelegate: SnackbarGlobalDelegate
     ) {
-        realtimeDatabaseServiceImpl.createUserData(uid, email) { exception ->
+        realtimeDatabaseServiceImpl.createUserData(userState) { exception ->
             handleExceptions(exception, snackbarDelegate)
         }
     }
@@ -99,11 +99,13 @@ class AccountScreenViewModel(
         )
     }
     private fun handleExceptions(exception: Throwable?, snackbarDelegate: SnackbarGlobalDelegate) {
-        snackbarDelegate.showSnackbar(
-            SnackbarState.ERROR,
-            exception?.localizedMessage ?: "",
-            withDismissAction = true
-        )
+        exception?.let {
+            snackbarDelegate.showSnackbar(
+                SnackbarState.ERROR,
+                it.localizedMessage ?: "",
+                withDismissAction = true
+            )
+        }
     }
     private fun checkCredentials(
         email: String,
@@ -112,7 +114,7 @@ class AccountScreenViewModel(
         passwordCheck: String? = null
     ) : Boolean {
         return when {
-            (email.isEmpty() || password.isEmpty() || passwordCheck?.isNotEmpty() == true) -> {
+            (email.isEmpty() || password.isEmpty() || (passwordCheck != null && passwordCheck.isEmpty())) -> {
                 handleExceptions(Throwable("Enter valid credentials"), snackbarDelegate)
                 true
             }

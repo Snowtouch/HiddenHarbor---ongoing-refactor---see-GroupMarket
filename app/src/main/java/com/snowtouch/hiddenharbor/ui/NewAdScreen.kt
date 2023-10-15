@@ -57,6 +57,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -69,6 +70,7 @@ import com.snowtouch.hiddenharbor.data.model.adCategories
 import com.snowtouch.hiddenharbor.ui.components.CustomElevatedCard
 import com.snowtouch.hiddenharbor.ui.components.SnackbarGlobalDelegate
 import com.snowtouch.hiddenharbor.ui.components.TopBar
+import com.snowtouch.hiddenharbor.ui.components.UniversalButton
 import com.snowtouch.hiddenharbor.ui.components.UserNotLoggedScreenContent
 import com.snowtouch.hiddenharbor.viewmodel.NewAdScreenViewModel
 import com.snowtouch.hiddenharbor.viewmodel.UserState
@@ -105,7 +107,7 @@ fun NewAdScreen(
         }
 
     ) { innerPadding ->
-        if (!userLoggedIn) { //TEST USER VARIABLE - TO REMOVE
+        if (userLoggedIn) { //TEST USER VARIABLE - TO REMOVE
             val scrollState = rememberScrollState()
             Column(
                 modifier = Modifier
@@ -122,7 +124,8 @@ fun NewAdScreen(
                     modifier = Modifier,
                     text = "Title",
                     value = viewModel.adUiState.ad.title,
-                    onValueChange = { viewModel.updateAdUiState(viewModel.adUiState.ad.copy(title = it)) }
+                    onValueChange = { viewModel.updateAdUiState(viewModel.adUiState.ad.copy(title = it)) },
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done)
                 )
                 AdTextField(
                     modifier = Modifier
@@ -156,8 +159,10 @@ fun NewAdScreen(
                     modifier = Modifier,
                     text = "Price", /*TODO- crash on comma*/
                     value = Ad(price = viewModel.adUiState.ad.price).getFormattedPrice(),
-                    onValueChange = { viewModel.updateAdUiState(viewModel.adUiState.ad.copy(price = it.toDouble())) },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                    onValueChange = {
+                        viewModel.updateAdUiState(viewModel.adUiState.ad.copy(price = it.toDouble())) },
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number, imeAction = ImeAction.Done)
                 )
                     FilterChip(
                         onClick = { groupButtonEnabled = !groupButtonEnabled
@@ -221,6 +226,7 @@ fun NewAdScreen(
                     }
                 }
             }
+            UniversalButton(onClick = { /*TODO*/ }, text = "Publish advertisement")
         } else {
             UserNotLoggedScreenContent(
                 paddingValues = innerPadding,
@@ -254,7 +260,8 @@ fun AdImagePicker(
             .fillMaxWidth()
             .padding(12.dp)){
             AsyncImage(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
                     .clip(MaterialTheme.shapes.small)
                     .clickable {
                         multiplePhotoPicker.launch(

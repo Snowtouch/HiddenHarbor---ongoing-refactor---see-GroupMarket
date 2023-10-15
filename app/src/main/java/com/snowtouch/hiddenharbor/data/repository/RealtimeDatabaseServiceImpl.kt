@@ -39,10 +39,10 @@ class RealtimeDatabaseServiceImpl(private val firebaseDatabase: FirebaseDatabase
         }
         userValueEventListener = null
     }
-    override fun createUserData(uid: String, email: String, onResult: (Throwable?) -> Unit) {
+    override fun createUserData(userState: UserState, onResult: (Throwable?) -> Unit) {
         userReference
-            .child(uid)
-            .setValue(UserState)
+            .child(userState.user.value.uniqueId)
+            .setValue(userState.user.value)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     onResult(null)

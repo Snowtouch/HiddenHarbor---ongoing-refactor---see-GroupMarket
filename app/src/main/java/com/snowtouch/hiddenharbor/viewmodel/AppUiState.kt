@@ -15,6 +15,7 @@ object UserState {
 
     fun setUserLoggedIn(loggedIn: Boolean) {
         _userLoggedIn.value = loggedIn
+        if (!loggedIn) _user.value = User()
     }
 
     fun updateUserData(user: User?) {

@@ -47,6 +47,7 @@ import androidx.navigation.NavHostController
 import com.snowtouch.hiddenharbor.R
 import com.snowtouch.hiddenharbor.data.model.AccountCategoryOption
 import com.snowtouch.hiddenharbor.data.model.AccountScreenCategory
+import com.snowtouch.hiddenharbor.ui.components.UniversalButton
 import com.snowtouch.hiddenharbor.ui.components.ApplicationBottomBar
 import com.snowtouch.hiddenharbor.ui.components.CustomElevatedCard
 import com.snowtouch.hiddenharbor.ui.components.SnackbarGlobalDelegate
@@ -144,7 +145,7 @@ fun AccountScreenContent(
                     onNewValuePassword = {
                             newValue -> accountActions.onPasswordChange(newValue) }
                 )
-                AccountScreenButton(
+                UniversalButton(
                     onClick = {
                         accountActions.login(
                             uiState.emailLogin, uiState.passwordLogin, snackbarGlobalDelegate) } ,
@@ -154,7 +155,7 @@ fun AccountScreenContent(
                     text = "Don't have account ?",
                     modifier = Modifier.padding(top = 24.dp),
                     fontWeight = FontWeight.Medium)
-                AccountScreenButton(
+                UniversalButton(
                     onClick = { showCreateAccountPopup.value = true },
                     text = "Create"
                 )
@@ -215,12 +216,15 @@ private fun CreateAccountPopUp(
                 PasswordTextField("Repeat password", uiState.passwordCheck,
                     onNewValueConfirmPassword, modifier = Modifier.padding(top = 6.dp))
 
-                AccountScreenButton(
+                UniversalButton(
                     modifier = Modifier.padding(top = 16.dp),
                     onClick = { onCreateAccountClick(
-                        uiState.emailNewAccount, uiState.passwordNewAccount, uiState.passwordCheck) },
+                        uiState.emailNewAccount,
+                        uiState.passwordNewAccount,
+                        uiState.passwordCheck)
+                              onDismissRequest()},
                     text = "Create account")
-                AccountScreenButton(
+                UniversalButton(
                     modifier = Modifier.padding(top = 16.dp),
                     onClick =  onDismissRequest,
                     text = "Cancel")
@@ -228,27 +232,7 @@ private fun CreateAccountPopUp(
         }
     }
 }
-@Composable
-private fun AccountScreenButton(
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit,
-    text: String
-){
-    ElevatedButton(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 25.dp),
-        onClick = onClick,
-        shape = MaterialTheme.shapes.extraSmall,
-        colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary)
-    ) {
-        Text(
-            text = text,
-            color = MaterialTheme.colorScheme.onPrimary,
-            fontWeight = FontWeight.Bold
-        )
-    }
-}
+
 @Composable
 fun LoginBox(
     valueEmail: String,
