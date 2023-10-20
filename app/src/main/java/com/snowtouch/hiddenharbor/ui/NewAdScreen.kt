@@ -67,6 +67,7 @@ import coil.request.ImageRequest
 import com.snowtouch.hiddenharbor.R
 import com.snowtouch.hiddenharbor.data.model.Ad
 import com.snowtouch.hiddenharbor.data.model.adCategories
+import com.snowtouch.hiddenharbor.ui.components.ConfirmationDialog
 import com.snowtouch.hiddenharbor.ui.components.CustomElevatedCard
 import com.snowtouch.hiddenharbor.ui.components.SnackbarGlobalDelegate
 import com.snowtouch.hiddenharbor.ui.components.TopBar
@@ -90,8 +91,9 @@ fun NewAdScreen(
     val context = LocalContext.current
 
     val scope = rememberCoroutineScope()
-    var groupButtonEnabled by remember { mutableStateOf(false)}
+    var groupButtonEnabled by remember { mutableStateOf(false) }
     var expandedGroupMenu by remember { mutableStateOf(false) }
+    var dialogConfirmationWindow: String? by remember { mutableStateOf(null) }
     var selectedGroup by remember { mutableStateOf(String()) }
 
     Scaffold(
@@ -107,7 +109,7 @@ fun NewAdScreen(
         }
 
     ) { innerPadding ->
-        if (userLoggedIn) { //TEST USER VARIABLE - TO REMOVE
+        if (!userLoggedIn) { //TEST USER VARIABLE - TO REMOVE
             val scrollState = rememberScrollState()
             Column(
                 modifier = Modifier
@@ -225,8 +227,36 @@ fun NewAdScreen(
                         }
                     }
                 }
+                UniversalButton(onClick = { dialogConfirmationWindow = "publish" }, text = "Publish advertisement")
+                UniversalButton(onClick = { dialogConfirmationWindow = "draft" }, text = "Save as draft")
+                UniversalButton(onClick = { dialogConfirmationWindow = "dismiss" }, text = "Dismiss")
+                if (dialogConfirmationWindow != null) {
+                    val buttonText = dialogConfirmationWindow
+                    ConfirmationDialog(
+                        onConfirmButton = { confirmed ->
+                            if (confirmed) {
+                                when (buttonText) {
+                                    "publish" -> { /*TODO*/ }
+                                    "draft" -> { /*TODO*/ }
+                                    "dismiss" -> { /*TODO*/ }
+                                }
+                            }
+                        },
+                        onDismissButton = { /*TODO*/ },
+                        onDismissRequest = { /*TODO*/ },
+                        icon = R.drawable.baseline_question_mark_24,
+                        titleText = {
+                            when (buttonText) {
+                                "publish" -> "Tutaj wpisz tytuł dla przycisku 'publish'"
+                                "draft" -> "Tutaj wpisz tytuł dla przycisku 'draft'"
+                                "dismiss" -> "Tutaj wpisz tytuł dla przycisku 'dismiss'"
+                                else -> ""
+                            }
+                        }
+                    )
+                }
             }
-            UniversalButton(onClick = { /*TODO*/ }, text = "Publish advertisement")
+
         } else {
             UserNotLoggedScreenContent(
                 paddingValues = innerPadding,
