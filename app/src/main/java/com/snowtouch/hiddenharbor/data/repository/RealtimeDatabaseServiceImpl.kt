@@ -9,10 +9,11 @@ import com.snowtouch.hiddenharbor.data.model.Ad
 import com.snowtouch.hiddenharbor.data.model.User
 import com.snowtouch.hiddenharbor.viewmodel.UserState
 
-class RealtimeDatabaseServiceImpl(private val firebaseDatabase: FirebaseDatabase): RealtimeDatabaseService {
+class RealtimeDatabaseServiceImpl(firebaseDatabase: FirebaseDatabase): RealtimeDatabaseService {
     private var userValueEventListener: ValueEventListener? = null
     private val adsReference = firebaseDatabase.getReference("advertisements")
     private val userReference = firebaseDatabase.getReference("users")
+
     override fun userDataListener(userState: UserState, onResult: (Throwable?) -> Unit) {
         userValueEventListener = userReference
             .child(userState.user.value.uniqueId)
@@ -39,19 +40,12 @@ class RealtimeDatabaseServiceImpl(private val firebaseDatabase: FirebaseDatabase
         }
         userValueEventListener = null
     }
-    override fun createUserData(userState: UserState, onResult: (Throwable?) -> Unit) {
+    override suspend fun createUserData(userState: UserState) {
         userReference
             .child(userState.user.value.uniqueId)
             .setValue(userState.user.value)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    onResult(null)
-                } else {
-                    onResult(task.exception)
-                }
-            }
     }
-    override fun createAd(ad: Ad, onComplete: (Boolean) -> Unit, onFailure: (Throwable?) -> Unit) {
+    override suspend fun createAd(ad: Ad, onComplete: (Boolean) -> Unit, onFailure: (Throwable?) -> Unit) {
         adsReference.push()
             .setValue(ad)
             .addOnCompleteListener { task ->

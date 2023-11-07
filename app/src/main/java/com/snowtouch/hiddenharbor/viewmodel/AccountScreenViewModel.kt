@@ -2,12 +2,14 @@ package com.snowtouch.hiddenharbor.viewmodel
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.snowtouch.hiddenharbor.data.model.User
 import com.snowtouch.hiddenharbor.data.repository.AccountServiceImpl
 import com.snowtouch.hiddenharbor.data.repository.RealtimeDatabaseServiceImpl
 import com.snowtouch.hiddenharbor.ui.components.SnackbarGlobalDelegate
 import com.snowtouch.hiddenharbor.ui.components.SnackbarState
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
 class AccountScreenViewModel(
     private val userState: UserState,
@@ -33,61 +35,67 @@ class AccountScreenViewModel(
     }
 
     fun createAccount(email: String, password: String, passwordCheck: String, snackbarDelegate: SnackbarGlobalDelegate) {
-        if (checkCredentials(email, password, snackbarDelegate, passwordCheck)) return
+        if (checkCredentials(email, password, snackbarDelegate, passwordCheck))
+            return
         else {
-            accountServiceImpl.createAccount(email, password) { uid, exception ->
-                if (exception!=null) {
-                    handleExceptions(exception, snackbarDelegate)
-                } else if(uid!=null) {
-                    userState.updateUserData(user.value.copy(uniqueId = uid, email = email))
-                    createUserDataOnAccountCreation(userState, snackbarDelegate)
-                    handleSuccessfulEvents("Account created", snackbarDelegate)
+            viewModelScope.launch {
+                try {
+                    accountServiceImpl.createAccount(email, password) { uid ->
+                        if (uid != null) {
+                            userState.updateUserData(user.value.copy(uniqueId = uid, email = email))
+                            createUserDataOnAccountCreation(userState, snackbarDelegate)
+                            handleSuccessfulEvents("Account created", snackbarDelegate)
+                        }
+                    }
+                } catch (exception: Exception) {
+                    handleExceptions(exception.cause, snackbarDelegate)
                 }
             }
         }
     }
     fun login(email: String, password: String, snackbarDelegate: SnackbarGlobalDelegate) {
-        if (checkCredentials(email, password, snackbarDelegate = snackbarDelegate)) {
+        if (checkCredentials(email, password, snackbarDelegate)) {
             return
         }
-        accountServiceImpl.authenticate(email, password) { exception ->
-            if (exception != null) {
-                handleExceptions(exception, snackbarDelegate)
-            } else {
+        viewModelScope.launch {
+            try {
+                accountServiceImpl.authenticate(email, password)
                 userState.setUserLoggedIn(true)
                 toggleCurrentUserDataListener(true, snackbarDelegate)
                 handleSuccessfulEvents("Successfully logged in", snackbarDelegate)
+            } catch (exception: Exception) {
+                handleExceptions(exception.cause, snackbarDelegate)
             }
         }
     }
     fun signOut(snackbarDelegate: SnackbarGlobalDelegate) {
-        accountServiceImpl.signOut()
-        userState.setUserLoggedIn(false)
-        toggleCurrentUserDataListener(false, snackbarDelegate)
-        clearEmailAndPasswordFields()
-        handleSuccessfulEvents("Successfully logged out", snackbarDelegate)
+        viewModelScope.launch {
+            accountServiceImpl.signOut()
+            userState.setUserLoggedIn(false)
+            toggleCurrentUserDataListener(false, snackbarDelegate)
+            clearEmailAndPasswordFields()
+            handleSuccessfulEvents("Successfully logged out", snackbarDelegate)
+        }
     }
-    fun toggleCurrentUserDataListener(
-        enable: Boolean,
-        snackbarDelegate: SnackbarGlobalDelegate
-    ) {
+    fun toggleCurrentUserDataListener(enable: Boolean, snackbarDelegate: SnackbarGlobalDelegate) {
         if (enable) realtimeDatabaseServiceImpl.userDataListener(UserState) { exception ->
             handleExceptions(exception, snackbarDelegate)
         } else {
             realtimeDatabaseServiceImpl.removeUserValueEventListener(userState)
         }
     }
-    private fun createUserDataOnAccountCreation(
-        userState: UserState,
-        snackbarDelegate: SnackbarGlobalDelegate
-    ) {
-        realtimeDatabaseServiceImpl.createUserData(userState) { exception ->
-            handleExceptions(exception, snackbarDelegate)
+    private fun createUserDataOnAccountCreation(userState: UserState,
+                                                snackbarDelegate: SnackbarGlobalDelegate) {
+        viewModelScope.launch {
+            try {
+                realtimeDatabaseServiceImpl.createUserData(userState)
+            }
+            catch (exception: Exception) {
+                handleExceptions(exception.cause, snackbarDelegate)
+            }
         }
     }
-    private fun clearEmailAndPasswordFields(
-
-    ) {
+    private fun clearEmailAndPasswordFields() {
         uiState.value = uiState.value.copy(emailLogin = "", passwordLogin = "",
             emailNewAccount = "", passwordNewAccount = "", passwordCheck = "")
     }

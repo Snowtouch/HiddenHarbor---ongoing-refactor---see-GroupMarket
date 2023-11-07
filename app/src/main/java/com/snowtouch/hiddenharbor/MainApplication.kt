@@ -14,7 +14,10 @@ class MainApplication : Application() {
         if (isFirebaseLocal) {
             startKoin {
                 androidContext(this@MainApplication)
-                modules(firebaseModule, viewModelModule, snackbarHostModule)
+                modules(
+                    firebaseModule,
+                    viewModelModule,
+                    snackbarHostModule)
             }
         }
     }

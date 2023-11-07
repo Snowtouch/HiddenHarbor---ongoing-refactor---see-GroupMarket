@@ -61,7 +61,7 @@ fun AdPreviewCard(ad: Ad) {
                 verticalAlignment = Alignment.Bottom
             ) {
                 Text(
-                    text = ad.getFormattedPrice(),
+                    text = ad.price,
                     modifier = Modifier.padding(8.dp),
                     fontWeight = FontWeight.Bold,
                     fontSize = 24.sp

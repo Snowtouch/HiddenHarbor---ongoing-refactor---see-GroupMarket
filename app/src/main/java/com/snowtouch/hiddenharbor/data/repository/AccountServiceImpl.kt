@@ -1,30 +1,40 @@
 package com.snowtouch.hiddenharbor.data.repository
 
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 
-class AccountServiceImpl(private val firebaseAuth: FirebaseAuth): AccountService {
-    override fun createAccount(email: String, password: String, onResult: (String?, Throwable?) -> Unit){
-        firebaseAuth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    onResult(firebaseAuth.currentUser?.uid, null)
-                } else {
-                    onResult(null, task.exception)
+class AccountServiceImpl(
+    private val firebaseAuth: FirebaseAuth,
+    private val ioDispatcher: CoroutineDispatcher
+): AccountService {
+    override suspend fun createAccount(email: String, password: String, onResult: (String?) -> Unit) {
+        withContext(ioDispatcher) {
+            firebaseAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        onResult(firebaseAuth.currentUser?.uid)
+                    } else {
+                        onResult(null)
+                    }
                 }
-            }
+        }
     }
 
-    override fun authenticate(email: String, password: String, onResult: (Throwable?) -> Unit) {
-        firebaseAuth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener { onResult(it.exception) }
+    override suspend fun authenticate(email: String, password: String) {
+        withContext(ioDispatcher) {
+            firebaseAuth.signInWithEmailAndPassword(email, password).await()
+        }
     }
 
-    override fun deleteAccount(password: String, onResult: (Throwable?) -> Unit) {
-        firebaseAuth.currentUser?.delete()
-            ?.addOnCompleteListener { onResult(it.exception) }
+    override suspend fun deleteAccount(password: String) {
+        withContext(ioDispatcher) {
+            firebaseAuth.currentUser?.delete()?.await()
+        }
     }
 
-    override fun signOut() {
-        firebaseAuth.signOut()
+    override suspend fun signOut() {
+        withContext(ioDispatcher) { firebaseAuth.signOut() }
     }
 }

@@ -7,6 +7,6 @@ interface RealtimeDatabaseService {
 
     fun userDataListener(userState: UserState, onResult: (Throwable?) -> Unit)
     fun removeUserValueEventListener(userState: UserState)
-    fun createUserData(userState: UserState, onResult: (Throwable?) -> Unit)
-    fun createAd(ad: Ad, onComplete: (Boolean) -> Unit, onFailure: (Throwable?) -> Unit)
+    suspend fun createUserData(userState: UserState)
+    suspend fun createAd(ad: Ad, onComplete: (Boolean) -> Unit, onFailure: (Throwable?) -> Unit)
 }

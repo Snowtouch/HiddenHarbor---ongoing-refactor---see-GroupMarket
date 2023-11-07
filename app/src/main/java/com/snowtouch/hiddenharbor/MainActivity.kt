@@ -18,6 +18,7 @@ import com.snowtouch.hiddenharbor.ui.components.SnackbarGlobalDelegate
 import com.snowtouch.hiddenharbor.ui.theme.HiddenHarborTheme
 import com.snowtouch.hiddenharbor.viewmodel.AccountScreenViewModel
 import com.snowtouch.hiddenharbor.viewmodel.UserState
+import kotlinx.coroutines.Dispatchers
 import org.koin.android.ext.android.get
 import org.koin.android.ext.android.inject
 import org.koin.androidx.compose.KoinAndroidContext
@@ -28,7 +29,7 @@ class MainActivity : ComponentActivity() {
     private val snackbarGlobalDelegate: SnackbarGlobalDelegate by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        accountScreenViewModel = AccountScreenViewModel(get(), AccountServiceImpl(get()), get())
+        accountScreenViewModel = AccountScreenViewModel(get(), AccountServiceImpl(get(), Dispatchers.IO), get())
         Log.d("Activity","onCreate")
 
         super.onCreate(savedInstanceState)

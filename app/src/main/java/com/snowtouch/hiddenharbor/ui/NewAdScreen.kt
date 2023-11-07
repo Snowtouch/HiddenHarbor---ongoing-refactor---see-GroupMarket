@@ -46,11 +46,11 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -61,11 +61,11 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.snowtouch.hiddenharbor.R
-import com.snowtouch.hiddenharbor.data.model.Ad
 import com.snowtouch.hiddenharbor.data.model.adCategories
 import com.snowtouch.hiddenharbor.ui.components.ConfirmationDialog
 import com.snowtouch.hiddenharbor.ui.components.CustomElevatedCard
@@ -84,17 +84,17 @@ fun NewAdScreen(
     navController: NavHostController,
     viewModel: NewAdScreenViewModel = koinViewModel()
 ) {
-    val user by viewModel.user.collectAsState()
-    val userLoggedIn by viewModel.userLoggedIn.collectAsState()
+    val user by viewModel.user.collectAsStateWithLifecycle()
+    val userLoggedIn by viewModel.userLoggedIn.collectAsStateWithLifecycle()
     val snackbarGlobalDelegate = koinInject<SnackbarGlobalDelegate>()
 
     val context = LocalContext.current
 
     val scope = rememberCoroutineScope()
-    var groupButtonEnabled by remember { mutableStateOf(false) }
+    var groupButtonEnabled by rememberSaveable { mutableStateOf(false) }
     var expandedGroupMenu by remember { mutableStateOf(false) }
-    var dialogConfirmationWindow: String? by remember { mutableStateOf(null) }
-    var selectedGroup by remember { mutableStateOf(String()) }
+    var dialogConfirmationWindow: String? by rememberSaveable { mutableStateOf(null) }
+    var selectedGroup by rememberSaveable { mutableStateOf(String()) }
 
     Scaffold(
         modifier = Modifier,
@@ -159,10 +159,12 @@ fun NewAdScreen(
                 }
                 AdTextField(
                     modifier = Modifier,
-                    text = "Price", /*TODO- crash on comma*/
-                    value = Ad(price = viewModel.adUiState.ad.price).getFormattedPrice(),
+                    text = "Price",
+                    value = viewModel.adUiState.ad.price,
                     onValueChange = {
-                        viewModel.updateAdUiState(viewModel.adUiState.ad.copy(price = it.toDouble())) },
+                        viewModel.updateAdUiState(
+                            viewModel.adUiState.ad.copy(
+                                price = viewModel.getValidatedPrice(it))) },
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number, imeAction = ImeAction.Done)
                 )
@@ -242,14 +244,14 @@ fun NewAdScreen(
                                 }
                             }
                         },
-                        onDismissButton = { /*TODO*/ },
-                        onDismissRequest = { /*TODO*/ },
+                        onDismissButton = { dialogConfirmationWindow = null },
+                        onDismissRequest = { },
                         icon = R.drawable.baseline_question_mark_24,
                         titleText = {
                             when (buttonText) {
-                                "publish" -> "Tutaj wpisz tytuł dla przycisku 'publish'"
-                                "draft" -> "Tutaj wpisz tytuł dla przycisku 'draft'"
-                                "dismiss" -> "Tutaj wpisz tytuł dla przycisku 'dismiss'"
+                                "publish" -> "Opublikuj"
+                                "draft" -> "Zapisz jako wersja robocza"
+                                "dismiss" -> "Anuluj publikację"
                                 else -> ""
                             }
                         }

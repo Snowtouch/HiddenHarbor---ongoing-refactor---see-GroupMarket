@@ -16,9 +16,27 @@ class NewAdScreenViewModel(private val userState: UserState) : ViewModel() {
 
 
 
-    fun updateAdUiState(updatedAd: Ad)
-    {
+    fun updateAdUiState(updatedAd: Ad) {
         adUiState = adUiState.copy(ad = updatedAd)
     }
+    fun getValidatedPrice(price: String): String {
+        val filteredChars = price.filterIndexed { index, c ->
+            c.isDigit()
+                    || (c == '.' && index != 0 && price.indexOf('.') == index)
+                    || (c == '.' && index != 0 && price.count { it == '.' } <= 1)
+        }
+        val trimmedPrice = filteredChars.removePrefix("0")
+        if (trimmedPrice.isBlank()) {
+            return ""
+        }
+        return if (trimmedPrice.count { it == '.' } == 1) {
+            val beforeDecimal = trimmedPrice.substringBefore('.')
+            val afterDecimal = trimmedPrice.substringAfter('.')
+            beforeDecimal + "." + afterDecimal.take(2)
+        } else {
+            trimmedPrice
+        }
+    }
+
 }
 data class AdUiState( var ad: Ad = Ad() )

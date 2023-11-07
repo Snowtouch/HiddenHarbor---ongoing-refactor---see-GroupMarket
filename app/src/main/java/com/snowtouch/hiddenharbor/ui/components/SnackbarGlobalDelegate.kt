@@ -14,7 +14,7 @@ enum class SnackbarState {
 }
 class SnackbarGlobalDelegate(
     var snackbarHostState: SnackbarHostState,
-    var coroutineScope: CoroutineScope
+    private var coroutineScope: CoroutineScope
 ) {
     private var snackbarState: SnackbarState = SnackbarState.DEFAULT
 

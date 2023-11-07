@@ -27,7 +27,6 @@ import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,14 +42,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.snowtouch.hiddenharbor.R
 import com.snowtouch.hiddenharbor.data.model.AccountCategoryOption
 import com.snowtouch.hiddenharbor.data.model.AccountScreenCategory
-import com.snowtouch.hiddenharbor.ui.components.UniversalButton
 import com.snowtouch.hiddenharbor.ui.components.ApplicationBottomBar
 import com.snowtouch.hiddenharbor.ui.components.CustomElevatedCard
 import com.snowtouch.hiddenharbor.ui.components.SnackbarGlobalDelegate
+import com.snowtouch.hiddenharbor.ui.components.UniversalButton
 import com.snowtouch.hiddenharbor.viewmodel.AccountActions
 import com.snowtouch.hiddenharbor.viewmodel.AccountScreenViewModel
 import com.snowtouch.hiddenharbor.viewmodel.LoginUiState
@@ -64,7 +64,7 @@ fun AccountScreen(
 ) {
     val snackbarGlobalDelegate = koinInject<SnackbarGlobalDelegate>()
     val uiState by viewModel.uiState
-    val userLoggedIn by viewModel.userLoggedIn.collectAsState()
+    val userLoggedIn by viewModel.userLoggedIn.collectAsStateWithLifecycle()
 
     AccountScreenContent(
         categories = categories,

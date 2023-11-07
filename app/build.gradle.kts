@@ -54,6 +54,7 @@ android {
 dependencies {
 
     implementation("androidx.core:core-ktx:1.12.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
     implementation("androidx.activity:activity-compose:1.8.0")
@@ -64,7 +65,7 @@ dependencies {
     implementation("androidx.compose.material3:material3")
     implementation("androidx.navigation:navigation-runtime-ktx:2.7.4")
     implementation("androidx.navigation:navigation-compose:2.7.4")
-    implementation("androidx.compose.material:material:1.5.3")
+    implementation("androidx.compose.material:material:1.5.4")
 
     implementation(platform("com.google.firebase:firebase-bom:32.2.3"))
     implementation("com.google.firebase:firebase-analytics-ktx")
@@ -84,6 +85,7 @@ dependencies {
 
     implementation("io.coil-kt:coil-compose:2.4.0")
 
+    testImplementation("org.mockito:mockito-core:5.6.0")
     testImplementation ("io.insert-koin:koin-test-junit4:3.5.0")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
