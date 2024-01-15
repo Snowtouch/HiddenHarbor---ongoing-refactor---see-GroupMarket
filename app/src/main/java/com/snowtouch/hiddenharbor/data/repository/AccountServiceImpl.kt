@@ -2,23 +2,18 @@ package com.snowtouch.hiddenharbor.data.repository
 
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
 class AccountServiceImpl(
     private val firebaseAuth: FirebaseAuth,
-    private val ioDispatcher: CoroutineDispatcher
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ): AccountService {
-    override suspend fun createAccount(email: String, password: String, onResult: (String?) -> Unit) {
+    override suspend fun createAccount(email: String, password: String, uid: (String?) -> Unit) {
         withContext(ioDispatcher) {
             firebaseAuth.createUserWithEmailAndPassword(email, password).await()
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        onResult(firebaseAuth.currentUser?.uid)
-                    } else {
-                        onResult(null)
-                    }
-                }
+            uid(firebaseAuth.currentUser?.uid)
         }
     }
 

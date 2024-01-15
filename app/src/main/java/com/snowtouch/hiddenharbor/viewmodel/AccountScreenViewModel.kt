@@ -41,11 +41,9 @@ class AccountScreenViewModel(
             viewModelScope.launch {
                 try {
                     accountServiceImpl.createAccount(email, password) { uid ->
-                        if (uid != null) {
-                            userState.updateUserData(user.value.copy(uniqueId = uid, email = email))
-                            createUserDataOnAccountCreation(userState, snackbarDelegate)
-                            handleSuccessfulEvents("Account created", snackbarDelegate)
-                        }
+                        userState.updateUserData(user.value.copy(uniqueId = uid!!, email = email))
+                        createUserDataOnAccountCreation(userState, snackbarDelegate)
+                        handleSuccessfulEvents("Account created", snackbarDelegate)
                     }
                 } catch (exception: Exception) {
                     handleExceptions(exception.cause, snackbarDelegate)
