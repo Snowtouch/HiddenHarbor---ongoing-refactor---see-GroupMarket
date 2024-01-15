@@ -55,7 +55,8 @@ fun TopBar(
                     Icon(
                         imageVector = Icons.Filled.ArrowBack,
                         contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary)
+                        tint = MaterialTheme.colorScheme.primary
+                    )
                 }
         },
         title = {
@@ -92,20 +93,6 @@ fun TopBar(
                 AppRoute.StartScreen.name -> {
                     GroupsButton(onClick = { navController.navigate(AppRoute.GroupScreen.name) })
                 }
-                /*AppRoute.NewAdScreen.name -> {
-                    ElevatedButton(
-                        modifier = Modifier.size(width = 100.dp, height = 40.dp),
-                        onClick = {  },
-                        shape = MaterialTheme.shapes.small,
-                        colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary)
-                    ) {
-                        Text(
-                            text = "Dismiss",
-                            color = MaterialTheme.colorScheme.onPrimary,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
-                }*/
             }
         }
     )
@@ -119,8 +106,7 @@ fun GroupsButton(
     IconButton(
         onClick = onClick,
         colors = IconButtonDefaults.iconButtonColors(
-            containerColor = MaterialTheme.colorScheme.primary,
-            contentColor = MaterialTheme.colorScheme.onPrimary),
+            contentColor = MaterialTheme.colorScheme.primary),
         modifier = modifier
             .border(1.dp, MaterialTheme.colorScheme.primary, MaterialTheme.shapes.small)
             .size(width = 47.dp, height = 47.dp)
@@ -142,5 +128,5 @@ fun GroupsButton(
 @Composable
 fun MainTopBarPreview(){
     val navController = NavHostController(LocalContext.current)
-    TopBar(navController = navController, searchFieldVisible = true, )
+    TopBar(navController = navController, searchFieldVisible = true)
 }

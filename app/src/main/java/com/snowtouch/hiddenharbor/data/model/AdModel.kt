@@ -17,14 +17,7 @@ data class Ad(
     val isFavorite: Boolean = false,
     val privacyLevel: AdPrivacyLevel = AdPrivacyLevel.PUBLIC,
     val adStatus: AdStatus = AdStatus.DRAFT
-) {
-    /*fun getFormattedPrice(): String {
-        val decimalFormat = DecimalFormat.getNumberInstance(Locale.getDefault())
-        if (price.isNaN() || price == 0.0)
-            return ""
-        return decimalFormat.format(price)
-    }*/
-}
+)
 enum class AdPrivacyLevel{
     PUBLIC, GROUP
 }

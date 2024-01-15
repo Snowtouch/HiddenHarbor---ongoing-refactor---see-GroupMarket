@@ -57,15 +57,3 @@ fun ConfirmationDialog(
 
     )
 }
-/*
-@Preview
-@Composable
-fun ConfirmationDialogPreview(){
-    ConfirmationDialog(
-        onConfirmButton = { /*TODO*/ },
-        onDismissButton = { /*TODO*/ },
-        onDismissRequest = { /*TODO*/ },
-        titleText = "",
-        icon = R.drawable.baseline_question_mark_24
-    )
-}*/

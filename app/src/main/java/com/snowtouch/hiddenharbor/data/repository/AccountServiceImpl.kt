@@ -11,7 +11,7 @@ class AccountServiceImpl(
 ): AccountService {
     override suspend fun createAccount(email: String, password: String, onResult: (String?) -> Unit) {
         withContext(ioDispatcher) {
-            firebaseAuth.createUserWithEmailAndPassword(email, password)
+            firebaseAuth.createUserWithEmailAndPassword(email, password).await()
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         onResult(firebaseAuth.currentUser?.uid)

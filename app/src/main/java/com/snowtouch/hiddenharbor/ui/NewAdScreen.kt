@@ -65,8 +65,13 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.storage.FirebaseStorage
 import com.snowtouch.hiddenharbor.R
+import com.snowtouch.hiddenharbor.data.model.Ad
 import com.snowtouch.hiddenharbor.data.model.adCategories
+import com.snowtouch.hiddenharbor.data.repository.RealtimeDatabaseServiceImpl
+import com.snowtouch.hiddenharbor.data.repository.StorageServiceImpl
 import com.snowtouch.hiddenharbor.ui.components.ConfirmationDialog
 import com.snowtouch.hiddenharbor.ui.components.CustomElevatedCard
 import com.snowtouch.hiddenharbor.ui.components.SnackbarGlobalDelegate
@@ -193,7 +198,7 @@ fun NewAdScreen(
                     enter = expandVertically(),
                     exit = shrinkVertically()
                 ) {
-                    CustomElevatedCard{
+                    CustomElevatedCard(modifier = Modifier.padding(bottom = 12.dp)){
                         ExposedDropdownMenuBox(
                             expanded = expandedGroupMenu,
                             onExpandedChange = { expandedGroupMenu = it }
@@ -240,7 +245,10 @@ fun NewAdScreen(
                                 when (buttonText) {
                                     "publish" -> { /*TODO*/ }
                                     "draft" -> { /*TODO*/ }
-                                    "dismiss" -> { /*TODO*/ }
+                                    "dismiss" -> {
+                                        navController.popBackStack()
+                                        viewModel.updateAdUiState(Ad())
+                                    }
                                 }
                             }
                         },
@@ -342,7 +350,8 @@ fun AdImagePicker(
                         contentScale = ContentScale.Fit)
                     Spacer(modifier = Modifier.padding(2.dp))
                 }
-            }}
+            }
+        }
     }
 }
 @Composable
@@ -445,7 +454,9 @@ fun AdTextField(
 @Preview
 @Composable
 fun NewAdScreenPreview(){
+    val realtimeDatabaseServiceImpl = RealtimeDatabaseServiceImpl(firebaseDatabase = FirebaseDatabase.getInstance())
+    val storageServiceImpl = StorageServiceImpl(firebaseStorage = FirebaseStorage.getInstance())
     val navController = NavHostController(LocalContext.current)
-    val viewModel =  NewAdScreenViewModel(UserState)
+    val viewModel =  NewAdScreenViewModel(UserState, realtimeDatabaseServiceImpl, storageServiceImpl)
     NewAdScreen(navController = navController, viewModel = viewModel)
 }

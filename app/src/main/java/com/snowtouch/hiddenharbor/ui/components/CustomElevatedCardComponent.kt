@@ -18,7 +18,7 @@ fun CustomElevatedCard(
         modifier = modifier,
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(
-            containerColor = Color.White),//MaterialTheme.colorScheme.secondaryContainer),
+            containerColor = Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         content = content)
 }

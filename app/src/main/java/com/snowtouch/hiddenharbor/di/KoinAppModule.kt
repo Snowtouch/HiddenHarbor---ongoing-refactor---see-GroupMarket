@@ -17,10 +17,6 @@ import kotlinx.coroutines.SupervisorJob
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
-//VARIABLE TO KEEP PERSONAL DATA HIDDEN
-
-
-
 val firebaseModule = module {
 
     single {
@@ -54,7 +50,6 @@ val firebaseModule = module {
 
 
 }
-@OptIn(ExperimentalStdlibApi::class)
 val viewModelModule = module {
     single { UserState }
     viewModel { AccountScreenViewModel(get(), get(), get()) }
