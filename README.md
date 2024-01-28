@@ -1,10 +1,11 @@
-# HiddenHarbor-in-progress-
+# The project is undergoing a refactoring process - see GroupMarket app repo.
+# HiddenHarbor-in-progress- 
 
-**Development Status:** In Progress
+**Development Status:** Abandoned
 
 ## Description
 
-This application is designed to enable users to post anonymous advertisements and communicate with each other. Users will have the following capabilities:
+This application is designed to enable users to post advertisements and communicate with each other in closed groups. Users will have the following capabilities:
 
 - Posting advertisements.
 - Editing and deleting their own advertisements.
